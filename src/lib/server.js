@@ -4,6 +4,7 @@ import morgan from 'morgan'
 import express from 'express'
 import * as mongo from './mongo.js'
 
+// import authRouter from '../router/auth.js'
 import fourOhFour from '../middleware/four-oh-four.js'
 import errorHandler from '../middleware/error-middleware.js'
 
@@ -19,6 +20,9 @@ const state = {
   isOn: false,
   http: null,
 }
+
+// routes
+// app.use(authRouter)
 
 app.use(fourOhFour)
 app.use(errorHandler)
