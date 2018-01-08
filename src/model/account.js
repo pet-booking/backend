@@ -4,7 +4,6 @@ import * as bcrypt from 'bcrypt'
 import { randomBytes } from 'crypto'
 import * as jwt from 'jsonwebtoken'
 import createError from 'http-errors'
-// import { promisify } from '../lib/promisify.js'
 import Mongoose, { Schema } from 'mongoose'
 
 const accountSchema = new Schema({
@@ -46,7 +45,6 @@ Account.createFromSignup = function (user) {
       user.tokenSeed = randomBytes(64).toString('hex')
       return new Account(user).save()
     })
-
 }
 
 Account.handleGoogleOAuth = function (openIDProfile) {
