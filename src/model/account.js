@@ -9,13 +9,27 @@ import Mongoose, { Schema } from 'mongoose'
 const accountSchema = new Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true, unique: true },
-  passwordHash: { type: String, required: true, unique: true },
+  passwordHash: { type: String, required: true },
   tokenSeed: { type: String, required: true, unique: true },
   googleOAuth: { type: String, default: false },
   facebookOAuth: { type: String, default: false },
   permission: { type: String },
   created: { type: Date, default: () => new Date() },
 })
+
+
+/*
+email: jen@mkpherson.com,
+  username: jennymac,
+  passwordHash: mva9prmujq;owrjn 0qapoemirjcgq;ilk3jnr0g9p8ahejp ;rgvocsjnrep9gbimhsvp;reibguapseinhgp iabvhnrgia ejmpr;ogicmespoibhpsvieoung mp9cpv,
+  tokenSeed: ;fj;kcasfmpjszpnoivejmrpgoiuelmlmscgjlilrdsalnlwhfoqaw84n5x7340857wc0e8oucnwoy,
+  googleOAuth: false,
+  facebookOAuth: false,
+  permission: { type: String },
+  created: { type: Date, default: () => new Date() },
+*/
+
+
 
 accountSchema.methods.passwordCompare = function (password) {
   return bcrypt.compare(password, this.passwordHash)

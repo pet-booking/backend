@@ -34,7 +34,7 @@
     "eslint": "^4.15.0",
     "faker": "^4.1.0",
     "jest": "^22.0.4",
-    "nodemon": "^1.14.8"
+    "nodemon": "^1.14.9"
   },
   "dependencies": {
     "aws-sdk": "^2.177.0",

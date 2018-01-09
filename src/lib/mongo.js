@@ -19,7 +19,7 @@ export const start = () => {
   return mongoose.connect(process.env.MONGODB_URI, state.config)
     .then(() => {
       state.isOn = true
-      console.log('--> MONGO CONNECTED:', process.env.MONGODB_URI)
+      console.log('MONGO_CONNECTED:', process.env.MONGODB_URI)
     })
 }
 
@@ -29,6 +29,6 @@ export const stop = () => {
   return mongoose.disconnect()
     .then(() => {
       state.isOn = false
-      console.log('--> MONGO DISCONNECTED')
+      console.log('MONGO_DISCONNECTED')
     })
 }
