@@ -1,64 +1,49 @@
 'use strict'
-import cors from 'cors'
-import morgan from 'morgan'
-import express from 'express'
-import * as mongo from './mongo.js'
-import bodyParser from 'body-parser'
 
-import authRouter from '../route/auth-router.js'
-import fourOhFour from '../middleware/four-oh-four.js'
-import errorHandler from '../middleware/error-middleware.js'
+const cors = require('cors')
+const morgan = require('morgan')
+const express = require('express')
+const mongoose = require('mongoose')
+const jsonParser = require('body-parser').json()
+
+mongoose.Promise = Promise
 
 const app = express()
+let server = null
+const production = process.env.NODE_ENV === 'dev'
+console.log(process.env.NODE_ENV)
 
-app.use(bodyParser.json())
-app.use(morgan(process.env.NODE_ENV))
-app.use(cors({
-  origin: process.env.CORS_ORIGIN.split(' '),
-  credentials: true,
-}))
+app.use(jsonParser)
+app.use(cors({ origin: process.env.CORS_ORIGIN }))
+app.use(morgan(production ? 'combined' : 'dev'))
 
-const state = {
-  isOn: false,
-  http: null,
-}
+app.all('*', (req, res) => res.sendStatus(404))
 
-// routes
+app.use(require('./error-middleware'))
 
-app.use(authRouter)
-
-app.use(fourOhFour)
-app.use(errorHandler)
-
-export const start = () => {
-  return new Promise((resolve, reject) => {
-    if (state.isOn)
-      return reject(new Error('USAGE ERROR: state is on'))
-    state.isOn = true
-    mongo.start()
-      .then(() => {
-        state.http = app.listen(process.env.PORT, () => {
-          console.log('SERVER_UP', process.env.PORT)
-          resolve()
-        })
+module.exports = {
+  start: () => {
+    return new Promise((resolve, reject) => {
+      if (server)
+        return reject(new Error('__SERVER_ERROR__ server already on'))
+      server = app.listen(process.env.PORT, () => {
+        console.log('__SERVER_ON__', process.env.PORT)
+        return resolve()
       })
-      .catch(reject)
-  })
-}
+    })
+      .then(() => mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true }))
+  },
+  stop: () => {
+    return new Promise((resolve, reject) => {
+      if (!server)
+        return reject(new Error('__SERVER_ERROR__ server already off'))
 
-export const stop = () => {
-  return new Promise((resolve, reject) => {
-    if (!state.isOn)
-      return reject(new Error('USAGE ERROR: the state is off'))
-    return mongo.stop()
-      .then(() => {
-        state.http.close(() => {
-          console.log('SERVER_DOWN')
-          state.isOn = false
-          state.http = null
-          resolve()
-        })
+      server.close(() => {
+        server = null
+        console.log('__SERVER_OFF__')
+        return resolve()
       })
-      .catch(reject)
-  })
+    })
+      .then(() => mongoose.disconnect())
+  },
 }
