@@ -4,6 +4,7 @@ const cors = require('cors')
 const morgan = require('morgan')
 const express = require('express')
 const mongoose = require('mongoose')
+const authRouter = require('../route/auth-router.js')
 const jsonParser = require('body-parser').json()
 
 mongoose.Promise = Promise
@@ -13,10 +14,15 @@ let server = null
 const production = process.env.NODE_ENV === 'dev'
 console.log(process.env.NODE_ENV)
 
+// REGISTER MIDDLEWARE
 app.use(jsonParser)
 app.use(cors({ origin: process.env.CORS_ORIGIN }))
 app.use(morgan(production ? 'combined' : 'dev'))
 
+//REGISTER ROUTES
+app.use(authRouter)
+
+//final 404
 app.all('*', (req, res) => res.sendStatus(404))
 
 app.use(require('./error-middleware'))

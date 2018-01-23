@@ -1,84 +1,62 @@
 'use strict'
 
-import * as bcrypt from 'bcrypt'
-import { randomBytes } from 'crypto'
-import * as jwt from 'jsonwebtoken'
-import createError from 'http-errors'
-import Mongoose, { Schema } from 'mongoose'
+const crypto = require('crypto')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
+const httpErrors = require('http-errors')
 
-const accountSchema = new Schema({
-  email: { type: String, required: true, unique: true },
+const accountSchema = mongoose.Schema({
   username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
   tokenSeed: { type: String, required: true, unique: true },
-  googleOAuth: { type: String, default: false },
-  facebookOAuth: { type: String, default: false },
-  permission: { type: String },
   created: { type: Date, default: () => new Date() },
 })
 
-
-/*
-email: jen@mkpherson.com,
-  username: jennymac,
-  passwordHash: mva9prmujq;owrjn 0qapoemirjcgq;ilk3jnr0g9p8ahejp ;rgvocsjnrep9gbimhsvp;reibguapseinhgp iabvhnrgia ejmpr;ogicmespoibhpsvieoung mp9cpv,
-  tokenSeed: ;fj;kcasfmpjszpnoivejmrpgoiuelmlmscgjlilrdsalnlwhfoqaw84n5x7340857wc0e8oucnwoy,
-  googleOAuth: false,
-  facebookOAuth: false,
-  permission: { type: String },
-  created: { type: Date, default: () => new Date() },
-*/
-
-
-
-accountSchema.methods.passwordCompare = function (password) {
+// Instance methods
+accountSchema.methods.passwordVerify = function (password) {
   return bcrypt.compare(password, this.passwordHash)
-    .then((success) => {
-      if (!success)
-        throw createError(401, 'AUTH ERROR: wrong password')
+    .then(correctPassword => {
+      if (!correctPassword)
+        throw httpErrors(401, '__AUTH_ERROR__ incorrect password')
       return this
     })
 }
 
 accountSchema.methods.tokenCreate = function () {
-  this.tokenSeed = randomBytes(32).toString('base64')
+  this.tokenSeed = crypto.randomBytes(64).toString('hex')
   return this.save()
-    .then(() => jwt.sign({ tokenSeed: this.tokenSeed }, process.env.SECRET))
-    .then(token => token)
+    .then(account => {
+      let options = { expiresIn: '7d' }
+      return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.CLOUD_SECRET, options)
+    })
 }
 
-const Account = Mongoose.model('account', accountSchema)
-
-Account.createFromSignup = function (user) {
-  let { password } = user
-  delete user.password
+accountSchema.methods.update = function (data) {
+  let { password } = data
+  delete data.password
   return bcrypt.hash(password, 8)
     .then(passwordHash => {
-      user.passwordHash = passwordHash
+      this.username = data.username
+      this.email = data.email
+      this.passwordHash = passwordHash
+      return this.save()
+    })
+}
+
+const Account = module.exports = mongoose.model('account', accountSchema)
+
+// Data is going to contain {username, email, and password}
+Account.create = function (data) {
+  // Hash password
+  let { password } = data
+  delete data.password
+  return bcrypt.hash(password, 8)
+    .then(passwordHash => {
+      data.passwordHash = passwordHash
       // Generate a tokenSeed
-      user.tokenSeed = randomBytes(64).toString('hex')
-      return new Account(user).save()
+      data.tokenSeed = crypto.randomBytes(64).toString('hex')
+      return new Account(data).save()
     })
 }
-
-Account.handleGoogleOAuth = function (openIDProfile) {
-  return Account.findOne({ email: openIDProfile.email })
-    .then(account => {
-      if (account) {
-        if (account.googleOAuth)
-          return account
-        throw new Error('account found but not connected to google')
-      }
-      return new Account({
-        googleOAuth: true,
-        email: openIDProfile.email,
-        username: openIDProfile.email.split('@')[0],
-        tokenSeed: crypto.randomBytes(32).toString('hex'),
-        passwordHash: crypto.randomBytes(32).toString('hex'),
-      })
-        .save()
-    })
-}
-
-// INTERFACE
-export default Account

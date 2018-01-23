@@ -1,15 +1,14 @@
 'use strict'
 
-import { Router } from 'express'
-import superagent from 'superagent'
-import Account from '../model/account.js'
+const { Router } = require('express')
+const Account = require('../model/account.js')
+const httpErrors = require('http-errors')
 
-export default new Router()
-  .post('/auth', (req, res, next) => {
-    console.log('--> REQ BODY:', req.body)
-  })
+const authRouter = module.exports = new Router()
 
-  // TODO
-  // .get('/auth', (req, res, next) => {
+authRouter.post('/auth', (req, res, next) => {
+  console.log(req.body)
 
-  // })
+  // Account.create(req.body)
+  // .then(Account)
+})
