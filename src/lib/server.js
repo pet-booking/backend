@@ -12,7 +12,7 @@ mongoose.Promise = Promise
 const app = express()
 let server = null
 const production = process.env.NODE_ENV === 'dev'
-console.log(process.env.NODE_ENV)
+console.log('__NODE_ENV__', process.env.NODE_ENV)
 
 // REGISTER MIDDLEWARE
 app.use(jsonParser)

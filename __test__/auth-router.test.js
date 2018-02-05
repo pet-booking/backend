@@ -23,10 +23,9 @@ describe('/auth', () => {
           email: 'sharki@shark.com',
           password: '123sharks',
         })
+
         .then(res => {
-          console.log('--> TEST RES',res)
           expect(res.status).toEqual(200)
-          // expect(res.body.token).toBeTruthy()
         })
     })
   })
