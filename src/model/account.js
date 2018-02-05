@@ -7,8 +7,8 @@ const mongoose = require('mongoose')
 const httpErrors = require('http-errors')
 
 const accountSchema = mongoose.Schema({
-  username: { type: String, required: true, unique: false },// change to true
-  email: { type: String, required: true, unique: false }, // change to true
+  username: { type: String, required: true, unique: true },// change to true
+  email: { type: String, required: true, unique: true }, // change to true
   passwordHash: { type: String, required: true },
   tokenSeed: { type: String, required: true, unique: true },
   created: { type: Date, default: () => new Date() },
@@ -28,7 +28,6 @@ accountSchema.methods.tokenCreate = function () {
   this.tokenSeed = crypto.randomBytes(64).toString('hex')
   return this.save()
     .then(account => {
-      // console.log('here')
       let options = { expiresIn: '7d' }
       return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.CLOUD_SECRET, options)
     })

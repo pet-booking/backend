@@ -7,10 +7,13 @@ const Account = require('../model/account.js')
 const authRouter = module.exports = new Router()
 
 authRouter.post('/auth', (req, res, next) => {
+  // res.json(req.body)
+
   Account.create(req.body)
     .then(account => account.tokenCreate())
     .then(token => {
-      res.json({ token })
+      console.log('HERE')
+      return res.json({ token })
     })
     .catch(next)
 })
