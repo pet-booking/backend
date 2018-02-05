@@ -7,8 +7,8 @@ const mongoose = require('mongoose')
 const httpErrors = require('http-errors')
 
 const accountSchema = mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
+  username: { type: String, required: true, unique: false },// change to true
+  email: { type: String, required: true, unique: false }, // change to true
   passwordHash: { type: String, required: true },
   tokenSeed: { type: String, required: true, unique: true },
   created: { type: Date, default: () => new Date() },
