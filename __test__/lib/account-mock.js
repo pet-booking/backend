@@ -12,7 +12,7 @@ export const create = () => {
     },
   }
 
-  return Account.createFromSignup(result.request)
+  return Account.createFromSignUp(result.request)
     .then(account => {
       result.account = account
       return account.tokenCreate()
@@ -27,7 +27,6 @@ export const create = () => {
     })
 }
 
-export const createMany = () => { }
 export const remove = () => Account.remove({})
 
 

@@ -47,7 +47,8 @@ accountSchema.methods.update = function (data) {
 
 const Account = module.exports = mongoose.model('account', accountSchema)
 // Data is going to contain {username, email, and password}
-Account.create = function (data) {
+
+Account.createFromSignUp = function (data) {
   // Hash password
   let { password } = data
   delete data.password
