@@ -29,7 +29,7 @@ accountSchema.methods.tokenCreate = function () {
   return this.save()
     .then(account => {
       let options = { expiresIn: '7d' }
-      return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.CLOUD_SECRET, options)
+      return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.SECRET, options)
     })
 }
 
@@ -46,9 +46,9 @@ accountSchema.methods.update = function (data) {
 }
 
 const Account = module.exports = mongoose.model('account', accountSchema)
-
 // Data is going to contain {username, email, and password}
-Account.create = function (data) {
+
+Account.createFromSignUp = function (data) {
   // Hash password
   let { password } = data
   delete data.password

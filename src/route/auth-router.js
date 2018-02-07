@@ -9,7 +9,7 @@ const authRouter = module.exports = new Router()
 authRouter.post('/auth', (req, res, next) => {
   // res.json(req.body)
 
-  Account.create(req.body)
+  Account.createFromSignUp(req.body)
     .then(account => account.tokenCreate())
     .then(token => {
       console.log('HERE')
@@ -18,7 +18,3 @@ authRouter.post('/auth', (req, res, next) => {
     .catch(next)
 })
 
-authRouter.post('/testing', (req, res, next) => {
-  res.json(req.body)
-
-})
