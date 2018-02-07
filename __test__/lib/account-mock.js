@@ -12,7 +12,9 @@ export const create = () => {
     },
   }
 
-  return Account.createFromSignUp(result.request)
+  result = { ...result, account: { ...result.request } }
+
+  return Account.createFromSignUp(result.account)
     .then(account => {
       result.account = account
       return account.tokenCreate()
@@ -23,9 +25,13 @@ export const create = () => {
     })
     .then(account => {
       result.account = account
+
       return result
     })
 }
+
+
+
 
 export const remove = () => Account.remove({})
 
