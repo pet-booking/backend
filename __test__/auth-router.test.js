@@ -65,6 +65,22 @@ describe('/Auth', () => {
           expect(res.status).toEqual(400)
         })
     })
+
+    test('409 Conflict - Duplicate User', () => {
+      return accountMock.create()
+        .then(mock => {
+          return superagent.post(`${apiURL}/auth`)
+            .send({
+              username: mock.request.username,
+              email: mock.request.email,
+              password: mock.request.password,
+            })
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(409)
+        })
+    })
   })
 
   describe('GET /auth', () => {
