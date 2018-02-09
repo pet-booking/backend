@@ -9,9 +9,10 @@ module.exports = new Router()
 
   .post('/auth', (req, res, next) => {
     Account.createFromSignUp(req.body)
-      .then(account => account.tokenCreate())
+      .then(account => {
+        return account.tokenCreate()
+      })
       .then(token => {
-        console.log('HERE')
         return res.json({ token })
       })
       .catch(next)
@@ -22,6 +23,15 @@ module.exports = new Router()
       .then(token => {
         res.cookie('X-PetsBook', token, { maxAge: 604800000 })
         res.json({ token })
+      })
+      .catch(next)
+  })
+
+  .put('/auth', basicAuth, (req, res, next) => {
+    req.account.update(req.body)
+      .then(() => req.account.tokenCreate())
+      .then(token => {
+        return res.json({ token })
       })
       .catch(next)
   })

@@ -32,6 +32,4 @@ module.exports = (req, res, next) => {
       next()
     })
     .catch(next)
-
-
 }

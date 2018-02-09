@@ -30,9 +30,6 @@ export const create = () => {
     })
 }
 
-
-
-
 export const remove = () => Account.remove({})
 
 
