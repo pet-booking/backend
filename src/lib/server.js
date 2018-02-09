@@ -43,7 +43,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (!server)
         return reject(new Error('__SERVER_ERROR__ server already off'))
-
       server.close(() => {
         server = null
         console.log('__SERVER_OFF__')
