@@ -38,15 +38,11 @@ accountSchema.methods.update = function (data) {
     throw httpErrors(400, `__AUTH_ERROR__ provide username, email or password`)
 
 
-
   if (data.password) {
     let { password } = data
     delete data.password
-
     return bcrypt.hash(password, 8)
       .then(passwordHash => {
-        this.username = data.username ? data.username : this.username
-        this.email = data.email ? data.email : this.email
         this.passwordHash = passwordHash
         return this.save()
       })

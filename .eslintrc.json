@@ -21,7 +21,6 @@
   }
 },
   "rules": {
-
     "no-console": "off",
     "indent": [ "error", 2 , {"SwitchCase": 1}],
     "quotes": ["error", "single", { "allowTemplateLiterals": true }],
