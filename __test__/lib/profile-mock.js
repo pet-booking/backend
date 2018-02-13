@@ -1,8 +1,9 @@
 'use strict'
 
 import faker from 'faker'
-import accountMock from './account-mock.js'
+import * as accountMock from './account-mock.js'
 import Profile from '../../src/model/profile.js'
+// const accountMock = require('./account-mock.js')
 
 export const create = () => {
   let result = {}
@@ -12,6 +13,7 @@ export const create = () => {
       return new Profile({
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
+        street: faker.address.streetAddress(),
         city: faker.address.city(),
         state: faker.address.state(),
         zipCode: faker.address.zipCode(),
@@ -30,5 +32,8 @@ export const createMany = (num) => {
 }
 
 export const remove = () => {
-  return Promise.all([accountMock.remove(), Profile.remove({})])
+  return Promise.all([
+    accountMock.remove(),
+    Profile.remove({}),
+  ])
 } 
