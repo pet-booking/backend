@@ -4,8 +4,10 @@ const cors = require('cors')
 const morgan = require('morgan')
 const express = require('express')
 const mongoose = require('mongoose')
-const authRouter = require('../route/auth-router.js')
 const jsonParser = require('body-parser').json()
+
+import authRouter from '../route/auth-router.js'
+import profileRouter from '../route/profile-router.js'
 
 mongoose.Promise = Promise
 
@@ -21,6 +23,7 @@ app.use(morgan(production ? 'combined' : 'dev'))
 
 //REGISTER ROUTES
 app.use(authRouter)
+app.use(profileRouter)
 
 //final 404
 app.all('*', (req, res) => res.sendStatus(404))
