@@ -10,7 +10,12 @@ const upload = multer({ dest: `${__dirname}/../temp` })
 
 export default new Router()
   .post('/profiles', (req, res, next) => {
-    console.log(req)
+    console.log('CHECKING FOR ACCOUNT -->', req.body)
     // return new Profile({})
+    res.json(res.body)
+    next()
+  })
+  .get('/test_get', (req, res, next) => {
+    res.json({ hello: 'World' })
   })
 
