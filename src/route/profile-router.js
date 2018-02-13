@@ -22,3 +22,10 @@ export default new Router()
       })
       .catch(next)
   })
+
+
+  .get('/profiles/:id', bearerAuth, (req, res, next) => {
+    console.log('AT GET PROFILES', req.headers)
+    res.json({ hello: 'world' })
+    next()
+  })

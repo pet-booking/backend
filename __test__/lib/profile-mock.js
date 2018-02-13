@@ -7,6 +7,7 @@ import Profile from '../../src/model/profile.js'
 
 export const create = () => {
   let result = {}
+
   return accountMock.create()
     .then(tempAccount => {
       result.tempAccount = tempAccount
@@ -16,14 +17,14 @@ export const create = () => {
         street: faker.address.streetAddress(),
         city: faker.address.city(),
         state: faker.address.state(),
-        zipCode: faker.address.zipCode(),
+        zip: faker.address.zipCode(),
         bio: faker.lorem.words(100),
         account: result.tempAccount.account._id,
       }).save()
     })
     .then(profile => {
       result.profile = profile
-      return profile
+      return result
     })
 }
 

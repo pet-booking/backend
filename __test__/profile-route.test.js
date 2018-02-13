@@ -16,14 +16,14 @@ describe('#Profiles', () => {
   afterAll(server.stop)
   afterEach(profileMock.remove)
 
-  describe('POST /profile', () => {
+  describe('POST /profiles', () => {
     test('200 OK - should return a profile', () => {
-      let tempAccount
+      let tempMockAccount
       return accountMock.create()
         .then(mock => {
-          tempAccount = mock
+          tempMockAccount = mock
           return superagent.post(`${apiURL}/profiles`)
-            .set('Authorization', `Bearer ${tempAccount.token}`)
+            .set('Authorization', `Bearer ${tempMockAccount.token}`)
             .send({
               firstName: 'Sharkie',
               lastName: 'Pooh',
@@ -42,17 +42,17 @@ describe('#Profiles', () => {
           expect(res.body.zip).toEqual('98144')
           expect(res.body.bio).toEqual('Hello World')
           expect(res.status).toEqual(200)
-          expect(res.body.account).toEqual(tempAccount.account._id.toString())
+          expect(res.body.account).toEqual(tempMockAccount.account._id.toString())
         })
     })
 
     test('400 Bad Request - Profile properties required', () => {
-      let tempAccount
+      let tempMockAccount
       return accountMock.create()
         .then(mock => {
-          tempAccount = mock
+          tempMockAccount = mock
           return superagent.post(`${apiURL}/profiles`)
-            .set('Authorization', `Bearer ${tempAccount.token}`)
+            .set('Authorization', `Bearer ${tempMockAccount.token}`)
             .send({
               zip: '98144',
               bio: 'Hello World',
@@ -105,13 +105,13 @@ describe('#Profiles', () => {
         })
     })
 
-    test('404 OK - account not found', () => {
-      let tempAccount
+    test('404 Not Found - account not found', () => {
+      let tempMockAccount
       return accountMock.create()
         .then(mock => {
-          tempAccount = mock
+          tempMockAccount = mock
           return superagent.post(`${apiURL}/badProfile`)
-            .set('Authorization', `Bearer ${tempAccount.token}`)
+            .set('Authorization', `Bearer ${tempMockAccount.token}`)
             .send({
               firstName: 'Sharkie',
               lastName: 'Pooh',
@@ -130,5 +130,57 @@ describe('#Profiles', () => {
     })
   })
 
+  describe('GET /profiles', () => {
+    test.only('200 OK - gets a single profile from profiles/:id ', () => {
+      let tempMockProfile
+      return profileMock.create()
+        .then(mock => {
+          tempMockProfile = mock
+          return superagent.get(`${apiURL}/profiles/${mock.profile._id}`)
+            .set('Authorization', `Bearer ${mock.tempAccount.token}`)
+        })
+        .then(res => {
+          expect(res.status).toEqual(200)
+          expect(res.body.firstName).toEqual(tempMockProfile.profile.firstName)
+          expect(res.body.lastName).toEqual(tempMockProfile.profile.lastName)
+          expect(res.body._id).toEqual(tempMockProfile.profile._id.toString())
+          expect(res.body.account).toEqual(tempMockProfile.tempAccount.account._id.toString())
+        })
+    })
 
+    test('400 Bad Request - missing headers', () => {
+      return profileMock.create()
+        .then(mock => {
+          return superagent.get(`${apiURL}/profiles/${mock.profile._id}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+    })
+
+    test('401 Unauthorized - bad bearer token', () => {
+      return profileMock.create()
+        .then(mock => {
+          return superagent.get(`${apiURL}/profiles/${mock.profile._id}`)
+            .set('Authorization', `Bearer badtoken`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(401)
+        })
+    })
+
+    test('404 Not Found - profile doesn\'t exist', () => {
+      return profileMock.create()
+        .then(mock => {
+          return superagent.get(`${apiURL}/profiles/badPath`)
+            .set('Authorization', `Bearer ${mock.tempAccount.token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(404)
+        })
+    })
+  })
 })
