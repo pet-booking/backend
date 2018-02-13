@@ -10,7 +10,7 @@ import { Promise } from 'mongoose'
 
 const apiURL = `http://localhost:${process.env.PORT}`
 
-describe('/Auth', () => {
+describe('#Auth', () => {
   beforeAll(server.start)
   afterAll(server.stop)
   afterEach(accountMock.remove)

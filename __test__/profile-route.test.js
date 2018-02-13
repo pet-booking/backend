@@ -6,18 +6,23 @@ import './lib/setup.js'
 import superagent from 'superagent'
 import * as server from '../src/lib/server.js'
 import * as accountMock from './lib/account-mock.js'
+import * as profileMock from './lib/profile-mock.js'
+
 import { Promise } from 'mongoose'
 
 const apiURL = `http://localhost:${process.env.PORT}`
 
-describe('/Auth', () => {
+describe('#Profiles', () => {
   beforeAll(server.start)
   afterAll(server.stop)
-  afterEach(accountMock.remove)
+  afterEach(profileMock.remove)
 
-  test('true', () => {
-    expect(true).toBeTruthy()
+  describe('POST /profile', () => {
+    test('200 OK - should return a profile', () => {
 
+    })
   })
+
+
 
 })
