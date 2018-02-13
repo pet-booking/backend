@@ -14,7 +14,7 @@ const apiURL = `http://localhost:${process.env.PORT}`
 describe('#Profiles', () => {
   beforeAll(server.start)
   afterAll(server.stop)
-  afterEach(profileMock.remove)
+  // afterEach(profileMock.remove)
 
   describe('POST /profile', () => {
     test('200 OK - should return a profile', () => {
@@ -28,7 +28,7 @@ describe('#Profiles', () => {
               firstName: 'Sharkie',
               lastName: 'Pooh',
               street: '123 45th Ave NE',
-              city: 'Seattle ',
+              city: 'Seattle',
               state: 'WA',
               zip: '98144',
               bio: 'Hello World',
