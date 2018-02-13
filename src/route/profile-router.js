@@ -11,20 +11,13 @@ const upload = multer({ dest: `${__dirname}/../temp` })
 
 export default new Router()
   .post('/profiles', bearerAuth, (req, res, next) => {
-
-    // let { body, headers, account } = req
-    // console.log('BODY\n', body, '\nHEADERS\n', headers, '\nACCOUNT\n', account)
-
+    // RON - by now it gets the account from bearer
     return new Profile({
       ...req.body,
       photo: undefined,
       account: req.account._id,
-      username: req.account.username, 
-      email: req.account.email,
     }).save()
       .then(profile => {
-
-        console.log('PROFILE --> \n', profile)
         res.json(profile)
       })
       .catch(next)
