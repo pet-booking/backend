@@ -3,7 +3,7 @@
 // mock vars
 import './lib/setup.js'
 
-import { Promise } from 'mongoose'
+// import { Promise } from 'mongoose'
 import superagent from 'superagent'
 import * as server from '../src/lib/server.js'
 import * as accountMock from './lib/account-mock.js'
@@ -187,6 +187,20 @@ describe('#Profiles', () => {
   })
 
   describe('GET /profiles | multiple', () => {
-
+    test.only('200 OK get 100 profiles', () => {
+      let tempMockProfile
+      return accountMock.create()
+        .then(mock => {
+          tempMockProfile = mock
+          return profileMock.createMany()
+        })
+        .then(() => superagent.get(`${apiURL}/profiles`)
+          .set('Authorization', `Bearer ${tempMockProfile.token}`))
+        .then(res => {
+          expect(res.status).toEqual(200)
+          expect(res.body.count).toEqual(100)
+          expect(res.body.data.length).toEqual(100)
+        })
+    })
   })
 })
