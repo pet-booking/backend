@@ -25,7 +25,11 @@ export default new Router()
 
 
   .get('/profiles/:id', bearerAuth, (req, res, next) => {
-    console.log('AT GET PROFILES', req.headers)
-    res.json({ hello: 'world' })
-    next()
+    Profile.findById(req.params.id)
+      .then(profile => {
+        if (!profile)
+          throw httpErrors(404, '__REQUEST_ERROR__ profile not found')
+        res.json(profile)
+      })
+      .catch(next)
   })

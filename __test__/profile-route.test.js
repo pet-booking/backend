@@ -17,6 +17,7 @@ describe('#Profiles', () => {
   afterEach(profileMock.remove)
 
   describe('POST /profiles', () => {
+
     test('200 OK - should return a profile', () => {
       let tempMockAccount
       return accountMock.create()
@@ -130,8 +131,9 @@ describe('#Profiles', () => {
     })
   })
 
-  describe('GET /profiles', () => {
-    test.only('200 OK - gets a single profile from profiles/:id ', () => {
+  describe('GET /profiles | single', () => {
+
+    test('200 OK - gets a single profile from profiles/:id ', () => {
       let tempMockProfile
       return profileMock.create()
         .then(mock => {
@@ -182,5 +184,9 @@ describe('#Profiles', () => {
           expect(res.status).toEqual(404)
         })
     })
+  })
+
+  describe('GET /profiles | multiple', () => {
+
   })
 })
