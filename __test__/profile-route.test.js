@@ -131,7 +131,7 @@ describe('#Profiles', () => {
     })
   })
 
-  describe('GET /profiles | single', () => {
+  describe('GET /profiles', () => {
 
     test('200 OK - gets a single profile from profiles/:id ', () => {
       let tempMockProfile
@@ -184,23 +184,36 @@ describe('#Profiles', () => {
           expect(res.status).toEqual(404)
         })
     })
-  })
 
-  describe('GET /profiles | multiple', () => {
-    test.only('200 OK get 100 profiles', () => {
+    test('200 OK get 100 profiles', () => {
       let tempMockProfile
       return accountMock.create()
         .then(mock => {
           tempMockProfile = mock
-          return profileMock.createMany()
+          return profileMock.createMany(200)
         })
         .then(() => superagent.get(`${apiURL}/profiles`)
           .set('Authorization', `Bearer ${tempMockProfile.token}`))
         .then(res => {
           expect(res.status).toEqual(200)
-          expect(res.body.count).toEqual(100)
+          expect(res.body.count).toEqual(200)
           expect(res.body.data.length).toEqual(100)
         })
     })
+
+    test('200 OK get 5 profiles', () => {
+      let tempMockProfile
+      return accountMock.create()
+        .then(mock => {
+          tempMockProfile = mock
+          return profileMock.createMany(5)
+        })
+        .then(() => superagent.get(`${apiURL}/profiles/all`)
+          .set('Authorization', `Bearer ${tempMockProfile.token}`))
+        .then(res => {
+          expect(res.status).toEqual(200)
+        })
+    })
+
   })
 })

@@ -32,25 +32,18 @@ export default new Router()
       page = 0
     page = page < 0 ? 0 : page
 
-
-
-    //FUZZIES
+    // FUZZIES
     if (req.query.firstName) req.query.firstName = ({ $regex: fuzzy(req.query.firstName), $options: 'i' })
     if (req.query.lastName) req.query.lastName = ({ $regex: fuzzy(req.query.lastName), $options: 'i' })
     if (req.query.city) req.query.city = ({ $regex: fuzzy(req.query.city), $options: 'i' })
     if (req.query.state) req.query.state = ({ $regex: fuzzy(req.query.state), $options: 'i' })
-
-
-
-    console.log('QUERY -->', req.query.page)
-
 
     let profilesCache
     Profile.find(req.query)
       .skip(page * 100)
       .limit(100)
       .then(profiles => {
-        profilesCache = profilesCache
+        profilesCache = profiles
         return Profile.find(req.query).count()
       })
       .then(count => {
@@ -65,12 +58,18 @@ export default new Router()
           prev: `http://localhost/profiles?page=${page < 1 ? 0 : page - 1}`,
           last: `http://localhost/profiles?page=${lastPage}`,
         })
-
         res.json(result)
       })
       .catch(next)
+  })
 
-
+  .get('/profiles/all', bearerAuth, (req, res, next) => {
+    Profile.find({})
+      .then(result => {
+        console.log(result)
+        res.json(result)
+      })
+      .catch(next)
   })
 
   .get('/profiles/:id', bearerAuth, (req, res, next) => {
@@ -82,3 +81,5 @@ export default new Router()
       })
       .catch(next)
   })
+
+  
