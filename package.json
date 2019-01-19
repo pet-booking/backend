@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "Pet booking backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pet-booking/backend.git"
+  },
+  "author": "Ron Barrantes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pet-booking/backend/issues"
+  },
+  "homepage": "https://github.com/pet-booking/backend#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4"
+  }
+}
