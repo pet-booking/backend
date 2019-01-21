@@ -17,9 +17,9 @@ app.use(jsonParser)
 app.use(cors({ origin: process.env.CORS_ORIGIN }))
 app.use(morgan(production ? 'combined' : 'dev'))
 
-// 
+// initial route
 app.get('/', (req, res)=> {
-  res.json({ TLCSitters: "For U" })
+  res.send('TLC Sitters for you 😊')
 })
 
 //final 404
@@ -39,6 +39,7 @@ export const start = () => {
   })
     .then(() => mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true }))
 }
+
 export const stop = () => {
   return new Promise((resolve, reject) => {
     if (!server)
