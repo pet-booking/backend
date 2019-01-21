@@ -4,6 +4,8 @@ import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 
+import errorHandler from '../middleware/error-middleware.js'
+
 const app = express()
 const jsonParser = bodyParser.json()
 const production = process.env.NODE_ENV === 'dev'
@@ -23,6 +25,9 @@ app.get('/', (req, res)=> {
 //final 404
 app.all('*', (req, res) => res.sendStatus(404))
 
+// handle errors
+app.use(errorHandler)
+
 export const start = () => {
   return new Promise((resolve, reject) => {
     if (server)
@@ -32,7 +37,7 @@ export const start = () => {
       return resolve()
     })
   })
-    // .then(() => mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true }))
+    .then(() => mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true }))
 }
 export const stop = () => {
   return new Promise((resolve, reject) => {
@@ -44,6 +49,6 @@ export const stop = () => {
       return resolve()
     })
   })
-    // .then(() => mongoose.disconnect())
+    .then(() => mongoose.disconnect())
 }
 

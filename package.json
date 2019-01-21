@@ -4,7 +4,12 @@
   "description": "Pet booking backend",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "watch": "nodemon index.js",
+    "start": "node index.js",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "dbon": "mkdir -p ./db && mongod --dbpath ./db",
+    "dboff": "killall mongod"
   },
   "repository": {
     "type": "git",
