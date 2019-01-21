@@ -1,4 +1,4 @@
-let required = [
+const required = [
   'PORT',
   'SECRET',
   'API_URL',

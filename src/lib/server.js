@@ -4,7 +4,8 @@ import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 
-import errorHandler from '../middleware/error-middleware.js'
+import errorHandler from '../middleware/error-middleware'
+import fourOhFour from '../middleware/four-oh-four'
 
 const app = express()
 const jsonParser = bodyParser.json()
@@ -18,14 +19,12 @@ app.use(cors({ origin: process.env.CORS_ORIGIN }))
 app.use(morgan(production ? 'combined' : 'dev'))
 
 // initial route
-app.get('/', (req, res)=> {
-  res.send('TLC Sitters for you 😊')
+app.get('/', (req, res) => {
+  res.send('TLC Sitters for you :)')
 })
 
-//final 404
-app.all('*', (req, res) => res.sendStatus(404))
-
 // handle errors
+app.use(fourOhFour)
 app.use(errorHandler)
 
 export const start = () => {
@@ -52,4 +51,3 @@ export const stop = () => {
   })
     .then(() => mongoose.disconnect())
 }
-

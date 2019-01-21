@@ -15,6 +15,14 @@
     "indent": [ "error", 2, 
       { "SwitchCase": 1 } 
     ],
+    "curly": "off",
+    "nonblock-statement-body-position":"off",
+    "jsx-a11y/href-no-hash": 0,
+    "jsx-a11y/anchor-has-content": 0,
+    "react/require-extension": 0,
+    "react/jsx-filename-extension": 0,
+    "react/jsx-uses-react": ["error"],
+    "react/jsx-uses-vars": ["error"],
     "semi": [
       "error",
       "never"
