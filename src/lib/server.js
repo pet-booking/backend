@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
   return res.send('TLC Sitters 🐶')
 })
 
-app.use(authRouter)
+app.use('/api', authRouter)
 app.use(gglMaps)
 
 // handle errors
