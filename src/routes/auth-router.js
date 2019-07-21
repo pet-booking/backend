@@ -5,7 +5,7 @@ const authRouter =  new Router()
 authRouter
   .get('/auth', (req, res, next) => {
     console.log('GETTING ROUTE AUTH ROUTE')
-    res.json({auth: true})
+    res.json({ auth: true })
   })
 
   .post('/auth', (req, res, next) => {
