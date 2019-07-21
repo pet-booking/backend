@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 
 import authRouter from '../routes/auth-router'
+import gglMaps from '../routes/ggl-maps'
 
 import errorHandler from '../middleware/error-middleware'
 import fourOhFour from '../middleware/four-oh-four'
@@ -26,34 +27,8 @@ app.get('/', (req, res) => {
   return res.send('TLC Sitters 🐶')
 })
 
-
-
-const googleMapsClient = require('@google/maps').createClient({
-  key: process.env.GOOGLE_MAPS_KEY,
-  Promise: Promise,
-})
-
-
-app.get('/getgeo', (req, res, next)=>{
-  googleMapsClient.geocode({address: '12th Ave S, Seattle, WA 98144'})
-    .asPromise()
-    .then((response) => {
-      const {location} = response.json.results[0].geometry
-
-      console.log('RESULT-->', location)
-      res.json(location)
-    // res.send('hello')
-    })
-    .catch((err) => {
-      console.log(err)
-      next(err)
-    })
-})
-
-
-
-app.use(authRouter)
-
+app.use('/api', authRouter)
+app.use(gglMaps)
 
 // handle errors
 app.use(fourOhFour)

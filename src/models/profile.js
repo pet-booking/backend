@@ -12,13 +12,13 @@ const profileSchema = new Schema({
       required: true,
       enum: statesArray,
     },
-    zip: {type: Number},
+    zip: { type: Number },
   },
   photo: { type: String },
   bio: { type: String },
   location: {
-    type: { type: String, enum: ['Point']},
-    coordinates: [{type: Number}],
+    type: { type: String, enum: ['Point'] },
+    coordinates: [{ type: Number }],
   },
   // account: { type: Schema.Types.ObjectId, required: true, unique: true },
 })
