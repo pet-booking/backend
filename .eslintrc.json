@@ -1,34 +1,36 @@
 {
   "rules": {
+    
     "quotes": [
-      "error", "single", 
-      { "allowTemplateLiterals": true }
-    ],
-    "space-in-parens": ["warn",  "never"],
-    "new-cap": ["error",  
-      { "capIsNewExceptions": [ "Record" ] }
-    ],    
-    "camelcase": ["warn"],
-    "comma-dangle": ["error", "always-multiline"], 
-    "no-console": "off",
-    "no-unused-vars": "off",    
-    "indent": [ "error", 2, 
-      { "SwitchCase": 1 } 
-    ],
-    "curly": "off",
-    "nonblock-statement-body-position":"off",
-
-    "semi": [
       "error",
-      "never"
-    ]
+      "single",
+      {
+        "allowTemplateLiterals": true
+      }
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "object-curly-spacing":["warn", "always"],
+    "no-console": "off",
+    "no-unused-vars": "off",
+    "indent": ["error", 2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "semi": ["error", "never"]
   },
-  "plugins": [
-  ],
+  "plugins": [],
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
-    "parserOptions": { "ecmaVersion": 6 } 
+    "ecmaVersion": 2018,
+    "ecmaFeatures": {
+      "module": true,
+      "spread": true
+    }
   },
   "env": {
     "es6": true,
@@ -40,11 +42,7 @@
   "globals": {
     "__API_URL__": false,
     "__TITLE__": false,
-    "__DEBUG__": false,
-    "err": true,
-    "req": true,
-    "res": true,
-    "next": true
+    "__DEBUG__": false
   },
   "extends": [
     "eslint:recommended"
