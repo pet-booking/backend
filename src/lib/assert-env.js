@@ -1,10 +1,10 @@
 const required = [
   'PORT',
-  'SECRET',
   'API_URL',
   'NODE_ENV',
   'MONGODB_URI',
   'CORS_ORIGIN',
+  'CLOUD_SECRET',
 ]
 
 try {
