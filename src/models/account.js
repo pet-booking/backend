@@ -30,7 +30,7 @@ accountSchema.methods.tokenCreate = function(){
   return this.save()
     .then(account => {
       const options = { expiresIn: '7d' }
-      return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.SECRET, options)
+      return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.CLOUD_SECRET, options)
     })
 }
 
