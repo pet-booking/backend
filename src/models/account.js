@@ -52,11 +52,7 @@ Account.create = function(data){
   // data
   let { password } = data
   delete data.password
-
-  // TODO: finish the accounts route
-
-  // FIXME: gotta fix me
-
+  
   return bcrypt.hash(password, 10)
     .then(passwordHash => {
       data.passwordHash = passwordHash
