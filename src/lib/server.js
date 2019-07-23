@@ -24,7 +24,10 @@ app.use(morgan(production ? 'combined' : 'dev'))
 // initial route
 app.get('/', (req, res) => {
   // console.log('HELLO WORLD')
-  return res.send('TLC Sitters 🐶')
+  return res.json({ message: 'TLC Sitters 🐶' })
+})
+app.post('/', (req, res) => {
+  return res.json(req.body)
 })
 
 app.use('/api', authRouter)
