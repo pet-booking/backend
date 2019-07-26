@@ -1,7 +1,7 @@
 'use strict'
 
 const faker = require('faker')
-// const Account = require('../../src/models/account')
+const Account = require('../../src/models/account')
 
 const accountMock = module.exports = {}
 
@@ -11,17 +11,21 @@ accountMock.fakeUser = () => ({
   password: faker.internet.password(),
 })
 
-
 accountMock.create = () => {
+  let result = accountMock.fakeUser()
+  return Account.create(result)
+    .then(account => {
+      result.account = account
+      return account.tokenCreate()
+    })
+    .then(token => {
+      result.token = token
+      return Account.findById(result.account._id)
+    })
+    .then(account => {
+      result.account = account
+      return result
+    })
 }
 
-// accountMock.find = () => {
-//   let account = Account.find({username: 'Gladys_Nolan'})
-//   console.log(account)
-// }
-
-
-// accountMock.remove = function(){
-//   console.log('hello')
-//   // return Account.killall()
-// }
+accountMock.remove = () => Account.deleteMany({})
