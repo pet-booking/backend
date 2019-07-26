@@ -24,7 +24,6 @@ accountSchema.methods.passwordVerify = function(password){
 }
 
 accountSchema.methods.tokenCreate = function(){
-  console.log('TOKEN.CREATE', this)
   // replaces the token for another token
   this.tokenSeed = crypto.randomBytes(64).toString('hex')
   return this.save()
@@ -58,9 +57,8 @@ Account.create = function(data){
       data.passwordHash = passwordHash
       // generate a token
       data.tokenSeed = crypto.randomBytes(64).toString('hex')
-      console.log('DATA FROM MODEL.CREATE', data)
       return new Account(data).save()
     })
 }
 
-export default Account
+module.exports = Account

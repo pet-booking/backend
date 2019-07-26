@@ -28,7 +28,6 @@ authRouter
   })
   
   .put('/auth', basicAuth, (req, res, next) => {
-    console.log('<<-- BODY -->>', req.body)
     if(!req.body.username || !req.body.email || !req.body.password)
       return next(httpErrors(400, 'REQUEST_ERROR: username, email, and password required'))
     req.account.update(req.body)
