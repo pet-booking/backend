@@ -5,14 +5,14 @@ const Account = require('../../src/models/account')
 
 const accountMock = module.exports = {}
 
-accountMock.fakeUser = () => ({
+accountMock.fakeUser = (pw) => ({
   username: faker.internet.userName(),
   email: faker.internet.email(),
-  password: faker.internet.password(),
+  password: pw || faker.internet.password(),
 })
 
-accountMock.create = () => {
-  let result = accountMock.fakeUser()
+accountMock.create = (pw) => {
+  let result = accountMock.fakeUser(pw)
   return Account.create(result)
     .then(account => {
       result.account = account
