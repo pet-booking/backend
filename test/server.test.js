@@ -8,7 +8,7 @@ const server = require('../src/lib/server')
 const apiURL = `http://localhost:${process.env.PORT}`
 
 
-describe('Server file', ()=> {
+describe('### Server file ###', ()=> {
   before(server.start)
   after(server.stop)
 
