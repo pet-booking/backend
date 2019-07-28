@@ -1,6 +1,8 @@
 // INTERFACE
 export default (err, req, res, next) => {
-  console.error({ err })
+  // console.error({ err })
+  console.log((err.message))
+
   if (err.status)
     return res.sendStatus(err.status)
 
@@ -19,4 +21,6 @@ export default (err, req, res, next) => {
     return res.sendStatus(401)
 
   res.sendStatus(500)
+
+  next()
 }
