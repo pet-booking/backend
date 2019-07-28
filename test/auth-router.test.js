@@ -12,9 +12,8 @@ describe('Auth Route', ()=> {
   afterEach(accountMock.remove)
   after(server.stop)
 
-  describe('/auth', () => {
-
-    it('should create a specific user', () => {
+  describe('POST', () => {
+    it('should create a specific user - 200', () => {
       return superagent.post(`${apiURL}/api/auth`)
         .send({
           username: 'shark',
@@ -27,15 +26,37 @@ describe('Auth Route', ()=> {
         })
     })
 
-    it('should create a random user', ()=> {
+    it('should error - missing field - 400', () => {
       return superagent.post(`${apiURL}/api/auth`)
-        .send(accountMock.fakeUser())
-        .then(res => {
-          assert.equal(res.status, 200)
-          assert.ok(res.body.token)
+        .send({
+          username: 'shark',
+          password: 'sharkies',
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          assert.equal(res.status, 400)
         })
     })
 
+    it('should error - conflict - 409', () => {
+      return superagent.post(`${apiURL}/api/auth`)
+        .send({
+          username: 'shark',
+          email: 'shark@inthedark.com',
+          password: 'sharkies',
+        })
+        .then(() => superagent.post(`${apiURL}/api/auth`)
+          .send({
+            username: 'shark',
+            email: 'shark@inthedark.com',
+            password: 'sharkies',
+          })
+        )
+        .then(Promise.reject)
+        .catch(res => {
+          assert.equal(res.status, 409)
+        })
+    })
   })
 })
 
