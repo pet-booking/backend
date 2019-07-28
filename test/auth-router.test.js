@@ -7,7 +7,7 @@ const server = require('../src/lib/server')
 
 const apiURL = `http://localhost:${process.env.PORT}/api/auth`
 
-describe('Auth Route', ()=> {
+describe('### Auth Route ###', ()=> {
   before(server.start)
   afterEach(accountMock.remove)
   after(server.stop)
