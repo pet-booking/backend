@@ -5,7 +5,6 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 
 import authRouter from '../routes/auth-router'
-import gglMaps from '../routes/ggl-maps'
 
 import errorHandler from '../middleware/error-middleware'
 import fourOhFour from '../middleware/four-oh-four'
@@ -26,12 +25,8 @@ app.get('/', (req, res) => {
   // console.log('HELLO WORLD')
   return res.json({ message: 'TLC Sitters 🐶' })
 })
-app.post('/', (req, res) => {
-  return res.json(req.body)
-})
 
 app.use('/api', authRouter)
-app.use(gglMaps)
 
 // handle errors
 app.use(fourOhFour)
