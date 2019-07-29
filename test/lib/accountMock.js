@@ -1,14 +1,14 @@
 'use strict'
 
-const faker = require('faker')
+const { internet } = require('faker')
 const Account = require('../../src/models/account')
 
 const accountMock = module.exports = {}
 
 accountMock.fakeUser = (pw) => ({
-  username: faker.internet.userName(),
-  email: faker.internet.email(),
-  password: pw || faker.internet.password(),
+  username: internet.userName(),
+  email: internet.email(),
+  password: pw || internet.password(),
 })
 
 accountMock.create = (pw) => {
