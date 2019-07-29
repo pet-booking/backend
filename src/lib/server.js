@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 
 import authRouter from '../routes/auth-router'
+import profileRouter from '../routes/profile-router'
 
 import errorHandler from '../middleware/error-middleware'
 import fourOhFour from '../middleware/four-oh-four'
@@ -27,11 +28,11 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api', authRouter)
+app.use('/api', profileRouter)
 
 // handle errors
 app.use(fourOhFour)
 app.use(errorHandler)
-
 
 export const start = () => {
   return new Promise((resolve, reject) => {
