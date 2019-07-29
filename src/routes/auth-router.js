@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import httpErrors from 'http-errors'
 import Account from '../models/account'
-import basicAuth from '../lib/basic-auth-middleware'
+import basicAuth from '../middleware/basic-auth-middleware'
 
 const authRouter =  new Router()
 
