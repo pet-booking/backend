@@ -1,6 +1,6 @@
 'use strict'
 
-const { name, address } = require('faker')
+const { name, address, image } = require('faker')
 const accountMock = require('./accountMock')
 
 
@@ -10,11 +10,13 @@ profileMock.fakeProfile = () => ({
   firstName: name.firstName(),
   lastName: name.lastName(),
   address: {
-    streetAddress: address.streetAddress(),
+    street: address.streetAddress(),
     city: address.city(),
     state: address.stateAbbr(),
     zipCode: address.zipCode(),
   },
+  photo: image.imageUrl(),
+  bio: 'fake text',
 })
 
 profileMock.create = () => {
