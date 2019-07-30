@@ -24,13 +24,12 @@ accountSchema.methods.passwordVerify = function(password){
 }
 
 accountSchema.methods.tokenCreate = function(){
-  console.log('TOKEN.CREATE', this)
   // replaces the token for another token
   this.tokenSeed = crypto.randomBytes(64).toString('hex')
   return this.save()
     .then(account => {
       const options = { expiresIn: '7d' }
-      return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.SECRET, options)
+      return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.CLOUD_SECRET, options)
     })
 }
 
@@ -52,19 +51,14 @@ Account.create = function(data){
   // data
   let { password } = data
   delete data.password
-
-  // TODO: finish the accounts route
-
-  // FIXME: gotta fix me
-
+  
   return bcrypt.hash(password, 10)
     .then(passwordHash => {
       data.passwordHash = passwordHash
       // generate a token
       data.tokenSeed = crypto.randomBytes(64).toString('hex')
-      console.log('DATA FROM MODEL.CREATE', data)
       return new Account(data).save()
     })
 }
 
-export default Account
+module.exports = Account

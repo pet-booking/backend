@@ -1,18 +1,18 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import statesArray from '../lib/states'
 
 const profileSchema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
+  phoneNumber: { type: String },
   address: {
+    street: { type: String, required: true },
     city: { type: String },
     state: {
-      type: String,
-      uppercase: true,
-      required: true,
-      enum: statesArray,
+      type: String, uppercase: true,
+      required: true, enum: statesArray,
     },
-    zip: { type: Number },
+    zip: { type: String },
   },
   photo: { type: String },
   bio: { type: String },
@@ -20,7 +20,7 @@ const profileSchema = new Schema({
     type: { type: String, enum: ['Point'] },
     coordinates: [{ type: Number }],
   },
-  // account: { type: Schema.Types.ObjectId, required: true, unique: true },
+  account: { type: Schema.Types.ObjectId, required: true, unique: true },
 })
 
-export default profileSchema
+module.exports =  model('profile', profileSchema)
