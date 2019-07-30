@@ -9,8 +9,16 @@ const fuzzy = (filterTerm) => new RegExp('.*' + filterTerm.toLowerCase()
 const profileRouter = new Router()
 
 profileRouter
-  .post('/profiles', (req, res, next) => {
-    return res.json(req.body)
+  .post('/profiles', bearerAuth, (req, res, next) => {
+    return new Profile({  
+      ...req.body,
+      account: req.account._id,
+      photo: undefined,
+    }).save()
+      .then(profile => {
+        res.json(profile)
+      })
+      .catch(next)
   })
 
 export default profileRouter

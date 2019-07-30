@@ -15,7 +15,7 @@ const fakeProfile = () => ({
     street: address.streetAddress(),
     city: address.city(),
     state: address.stateAbbr(),
-    zipCode: address.zipCode(),
+    zip: address.zipCode().match(/^[\d]{0,5}/)[0],
   },
   photo: image.imageUrl(),
   bio: 'fake text',

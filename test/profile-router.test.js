@@ -7,7 +7,7 @@ const server = require('../src/lib/server')
 
 const apiURL = `http://localhost:${process.env.PORT}/api/profiles`
 
-describe.only('### Profile Route ###', ()=> {
+describe('### Profile Route ###', ()=> {
   before(server.start)
   afterEach(profileMock.remove)
   after(server.stop)
@@ -26,8 +26,15 @@ describe.only('### Profile Route ###', ()=> {
         })
         .then(res => {
           expect(res.status).to.equal(200)
+          expect(res.body._id).to.exist
+          expect(res.body.account).to.exist
           expect(res.body.firstName).to.equal(fakeProfile.firstName)
           expect(res.body.lastName).to.equal(fakeProfile.lastName)
+          expect(res.body.bio).to.equal(fakeProfile.bio)
+          expect(res.body.address.street).to.equal(fakeProfile.address.street)
+          expect(res.body.address.city).to.equal(fakeProfile.address.city)
+          expect(res.body.address.state).to.equal(fakeProfile.address.state)
+          expect(res.body.address.zip).to.equal(fakeProfile.address.zip)
         })
     })
   })
