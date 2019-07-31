@@ -1,19 +1,20 @@
 'use strict'
 
-const { name, address, image } = require('faker')
+const { name, address, image, phone } = require('faker')
 const accountMock = require('./accountMock')
-
+const Profile = require('../../src/models/profile')
 
 const profileMock = module.exports = {}
 
 profileMock.fakeProfile = () => ({
   firstName: name.firstName(),
   lastName: name.lastName(),
+  phoneNumber: phone.phoneNumber(),
   address: {
     street: address.streetAddress(),
     city: address.city(),
     state: address.stateAbbr(),
-    zipCode: address.zipCode(),
+    zip: address.zipCode().match(/^[\d]{0,5}/)[0],
   },
   photo: image.imageUrl(),
   bio: 'fake text',
@@ -26,6 +27,7 @@ profileMock.create = () => {
 profileMock.createMany = (num) => {}
 
 profileMock.remove = () => {
-  return accountMock.remove()
+  return Profile.deleteMany({})
+    .then(accountMock.remove)
 }
 

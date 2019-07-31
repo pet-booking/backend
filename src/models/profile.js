@@ -4,13 +4,13 @@ import statesArray from '../lib/states'
 const profileSchema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  phoneNumber: { type: String },
+  phoneNumber: { type: String, required: true },
   address: {
-    street: { type: String, required: true },
+    street: { type: String },
     city: { type: String },
     state: {
       type: String, uppercase: true,
-      required: true, enum: statesArray,
+      enum: statesArray,
     },
     zip: { type: String },
   },

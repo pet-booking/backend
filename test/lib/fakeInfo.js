@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 require('@babel/register')
-const { name, internet, address, image } = require('faker')
+const { name, internet, address, image, phone } = require('faker')
 
 const fakeUser = (pw) => ({
   username: internet.userName(),
@@ -11,6 +11,7 @@ const fakeUser = (pw) => ({
 const fakeProfile = () => ({
   firstName: name.firstName(),
   lastName: name.lastName(),
+  phoneNumber: phone.phoneNumber(),
   address: {
     street: address.streetAddress(),
     city: address.city(),
