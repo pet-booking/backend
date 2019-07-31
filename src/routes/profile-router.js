@@ -21,4 +21,8 @@ profileRouter
       .catch(next)
   })
 
+  .get('/profiles', (req, res, next)=> {
+    console.log('getting profiles')
+    next()
+  })
 export default profileRouter
