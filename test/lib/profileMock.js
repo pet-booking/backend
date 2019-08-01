@@ -21,7 +21,19 @@ profileMock.fakeProfile = () => ({
 })
 
 profileMock.create = () => {
+  let result = {}
   return accountMock.create()
+    .then(temp => {
+      result.tempAccount = temp
+      return new Profile({
+        ...profileMock.fakeProfile(),
+        account: result.tempAccount.account._id,
+      }).save()
+    })
+    .then(profile => {
+      result.profile = profile
+      return result
+    })
 }
 
 profileMock.createMany = (num) => {}

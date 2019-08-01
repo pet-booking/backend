@@ -3,20 +3,21 @@ require('@babel/register')
 const expect = require('chai').expect
 const superagent = require('superagent')
 const server = require('../src/lib/server')
+const accountMock = require('./lib/accountMock')
 const profileMock = require('./lib/profileMock')
 
 const apiURL = `http://localhost:${process.env.PORT}/api/profiles`
 
 describe('### Profile Route ###', ()=> {
   before(server.start)
-  afterEach(profileMock.remove)
+  // afterEach(profileMock.remove)
   after(server.stop)
 
   describe('POST', () => {
     it('expects to create a profile - 200', () => {
       const fakeProfile = profileMock.fakeProfile()
       let tempAccount
-      return profileMock.create()
+      return accountMock.create()
         .then(account => {
           tempAccount = account
           return superagent.post(apiURL)
@@ -72,7 +73,7 @@ describe('### Profile Route ###', ()=> {
     it('expect account does not exist - 404', () => {
       const fakeProfile = profileMock.fakeProfile()
       let token
-      return profileMock.create()
+      return accountMock.create()
         .then(account => {
           token = account.token
           return profileMock.remove()
@@ -94,7 +95,7 @@ describe('### Profile Route ###', ()=> {
       delete fakeProfile.lastName
 
       let tempAccount
-      return profileMock.create()
+      return accountMock.create()
         .then(account => {
           tempAccount = account
           return superagent.post(apiURL)
@@ -106,5 +107,49 @@ describe('### Profile Route ###', ()=> {
           expect(res.status).to.equal(400)
         })
     })
+  })
+
+  describe.only('GET', () => {
+    // getting a me profile 200
+    it('expect to get my profile - 200', () => {
+      let mockAccount
+      return profileMock.create()
+        .then(temp => {
+          mockAccount = temp
+          return superagent.get(`${apiURL}/me`)
+            .set('Authorization', `Bearer ${mockAccount.tempAccount.token}`)
+        })
+        .then(res => {
+          const { 
+            firstName, lastName, _id, address, bio, account, phoneNumber,
+          } = mockAccount.profile
+          expect(res.status).to.equal(200)
+          expect(res.body.firstName).to.equal(firstName)
+          expect(res.body.lastName).to.equal(lastName)
+          expect(res.body.phoneNumber).to.equal(phoneNumber)
+          expect(res.body.bio).to.equal(bio)
+          expect(res.body._id).to.equal(_id.toString())
+          expect(res.body.address.street).to.equal(address.street)
+          expect(res.body.address.city).to.equal(address.city)
+          expect(res.body.address.state).to.equal(address.state)
+          expect(res.body.address.zip).to.equal(address.zip)
+          expect(res.body.account).to.equal(account._id.toString())
+        })
+    })
+
+    // get a profile based on the id - 200
+
+    // getting a bunch of profiles profile 200
+
+    // can't find a profile 404
+
+    // unauthorized 401
+
+    // bad request bad token 400
+
+    // bad request no token 400
+
+    // bad request fake token 400
+
   })
 })
