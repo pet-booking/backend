@@ -109,7 +109,7 @@ describe('### Profile Route ###', ()=> {
     })
   })
 
-  describe.only('GET', () => {
+  describe('GET', () => {
     // getting a me profile 200
     it('expect to get my profile - 200', () => {
       let mockAccount
