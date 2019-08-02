@@ -37,4 +37,15 @@ profileRouter
       .catch(next)
   })
 
+  .get('/profiles/:id', bearerAuth, (req, res, next)=> {
+    console.log(req.params.id)
+    return Profile.findById( req.params.id )
+      .then(profile => {
+        if(!profile)
+          throw httpErrors(404, 'REQUEST_ERROR: Profile not found')
+        res.json(profile)
+      })
+      .catch(next)
+  })
+
 export default profileRouter

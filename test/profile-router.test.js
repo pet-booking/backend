@@ -137,13 +137,13 @@ describe('### Profile Route ###', ()=> {
         })
     })
 
-    it('should get a profile based on the id - 200', () => {
+    it.only('should get a profile based on the id - 200', () => {
       let mockAccount
       return profileMock.create()
         .then(temp => {
           mockAccount = temp
-          return superagent.get(`${apiURL}/:id`)
-            .set('Authorization', `Bearer ${mockAccount.tempAccount.token}`)
+          return superagent.get(`${apiURL}/${temp.profile._id}`)
+            .set('Authorization', `Bearer ${temp.tempAccount.token}`)
         })
         .then(res => {
           const { 
