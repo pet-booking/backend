@@ -12,7 +12,7 @@ export default (req, res, next) => {
     return next(httpErrors(401, 'REQUEST_ERROR: unauthorized'))
 
   promisify(verify)(token, process.env.CLOUD_SECRET)
-    .catch(err => Promise.reject(next(httpErrors(401, err))))
+    .catch(err => Promise.reject(next(httpErrors(401, `ERROR: ${err}`))))
     .then(decrypted => {
       return Account.findOne({ tokenSeed: decrypted.tokenSeed })
         .then(account => {

@@ -10,7 +10,7 @@ const apiURL = `http://localhost:${process.env.PORT}/api/profiles`
 
 describe('### Profile Route ###', ()=> {
   before(server.start)
-  // afterEach(profileMock.remove)
+  afterEach(profileMock.remove)
   after(server.stop)
 
   describe('POST', () => {
@@ -137,7 +137,33 @@ describe('### Profile Route ###', ()=> {
         })
     })
 
-    it.only('should get a profile based on the id - 200', () => {
+    it(`can't find profile/me - 404`,  () => {
+      let token
+      return accountMock.create()
+        .then(temp => {
+          token = temp.token
+          return superagent.get(`${apiURL}/me`)
+            .set('Authorization', `Bearer ${token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).to.equal(404)
+        })
+    })
+
+    it(`can't access a profile/me - unauthorized - 401`, () => {
+      return profileMock.create()
+        .then(() => {
+          return superagent.get(`${apiURL}/me`)
+            .set('Authorization', `Bearer FakeAssToken`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).to.equal(401)
+        })
+    })
+
+    it('should get a profile based on the id - 200', () => {
       let mockAccount
       return profileMock.create()
         .then(temp => {
@@ -163,11 +189,20 @@ describe('### Profile Route ###', ()=> {
         })
     })
 
+    it(`can't find a profile by id - 404`, () => {
+      let token
+      return accountMock.create()
+        .then(temp => {
+          token = temp.token
+          return superagent.get(`${apiURL}/FakeProfileId`)
+            .set('Authorization', `Bearer ${token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).to.equal(404)
+        })
+    })
 
-
-    // getting a bunch of profiles profile 200
-
-    // can't find a profile 404
 
     // unauthorized 401
 
@@ -176,6 +211,10 @@ describe('### Profile Route ###', ()=> {
     // bad request no token 400
 
     // bad request fake token 400
+
+
+
+    // getting a bunch of profiles profile 200
 
   })
 })
