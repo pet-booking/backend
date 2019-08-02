@@ -3,8 +3,8 @@ require('@babel/register')
 const expect = require('chai').expect
 const superagent = require('superagent')
 const server = require('../src/lib/server')
-const accountMock = require('./lib/accountMock')
-const profileMock = require('./lib/profileMock')
+const accountMock = require('./lib/account-mock')
+const profileMock = require('./lib/profile-mock')
 
 const apiURL = `http://localhost:${process.env.PORT}/api/profiles`
 
@@ -137,7 +137,33 @@ describe('### Profile Route ###', ()=> {
         })
     })
 
-    // get a profile based on the id - 200
+    it('should get a profile based on the id - 200', () => {
+      let mockAccount
+      return profileMock.create()
+        .then(temp => {
+          mockAccount = temp
+          return superagent.get(`${apiURL}/:id`)
+            .set('Authorization', `Bearer ${mockAccount.tempAccount.token}`)
+        })
+        .then(res => {
+          const { 
+            firstName, lastName, _id, address, bio, account, phoneNumber,
+          } = mockAccount.profile
+          expect(res.status).to.equal(200)
+          expect(res.body.firstName).to.equal(firstName)
+          expect(res.body.lastName).to.equal(lastName)
+          expect(res.body.phoneNumber).to.equal(phoneNumber)
+          expect(res.body.bio).to.equal(bio)
+          expect(res.body._id).to.equal(_id.toString())
+          expect(res.body.address.street).to.equal(address.street)
+          expect(res.body.address.city).to.equal(address.city)
+          expect(res.body.address.state).to.equal(address.state)
+          expect(res.body.address.zip).to.equal(address.zip)
+          expect(res.body.account).to.equal(account._id.toString())
+        })
+    })
+
+
 
     // getting a bunch of profiles profile 200
 

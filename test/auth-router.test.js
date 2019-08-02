@@ -2,7 +2,7 @@ require('./lib/setup')
 require('@babel/register')
 const expect = require('chai').expect
 const superagent = require('superagent')
-const accountMock = require('./lib/accountMock')
+const accountMock = require('./lib/account-mock')
 const server = require('../src/lib/server')
 
 const apiURL = `http://localhost:${process.env.PORT}/api/auth`
