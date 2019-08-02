@@ -36,7 +36,9 @@ profileMock.create = () => {
     })
 }
 
-profileMock.createMany = (num) => {}
+profileMock.createMany = (num=10) => {
+  return Promise.all(new Array(num).fill(0).map(() => profileMock.create()))
+}
 
 profileMock.remove = () => {
   return Profile.deleteMany({})

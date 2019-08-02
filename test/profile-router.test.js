@@ -203,18 +203,12 @@ describe('### Profile Route ###', ()=> {
         })
     })
 
-
-    // unauthorized 401
-
-    // bad request bad token 400
-
-    // bad request no token 400
-
-    // bad request fake token 400
-
-
-
-    // getting a bunch of profiles profile 200
-
+    it('creates 20 fake accounts', () => {
+      return profileMock.createMany(20)
+        .then(res => {
+          expect(res.length).to.equal(20)
+          expect(res[0].profile.account).to.exist
+        })
+    })
   })
 })
