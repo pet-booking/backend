@@ -9,6 +9,8 @@ const fuzzy = (filterTerm) => new RegExp('.*' + filterTerm.toLowerCase()
 
 const profileRouter = new Router()
 
+// TODO: try to make everything async/await
+
 profileRouter
   .post('/profiles', bearerAuth, (req, res, next) => {
     return new Profile({  
@@ -39,6 +41,20 @@ profileRouter
 
   .get('/profiles/:id', bearerAuth, (req, res, next)=> {
     return Profile.findById(req.params.id)
+      .then(profile => {
+        res.json(profile)
+      })
+      .catch(next)
+  })
+
+  .put('/profiles/me', bearerAuth, (req, res, next)=> {
+    if (!req.body.firstName || !req.body.lastName)
+      return next(httpErrors(400, 'ERROR: first and last name required'))
+    return Profile.updateOne({ account: req.account._id }, req.body)
+      .setOptions({ new: true, runValidators: true })
+      .then(() => {
+        return Profile.findOne({ account: req.account._id })
+      })
       .then(profile => {
         res.json(profile)
       })

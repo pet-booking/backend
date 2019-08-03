@@ -10,7 +10,7 @@ const apiURL = `http://localhost:${process.env.PORT}/api/profiles`
 
 describe('### Profile Route ###', ()=> {
   before(server.start)
-  afterEach(profileMock.remove)
+  // afterEach(profileMock.remove)
   after(server.stop)
 
   describe('POST', () => {
@@ -210,5 +210,32 @@ describe('### Profile Route ###', ()=> {
           expect(res[0].profile.account).to.exist
         })
     })
+  })
+
+  describe('PUT', () => {
+    // Able to change a profile - 200
+
+    it('should modify profile/me', () => {
+      return profileMock.create()
+        .then(account => {
+          return superagent.put(`${apiURL}/me`)
+            .set('Authorization', `Bearer ${account.tempAccount.token}`)
+            .send({
+              firstName: 'Hello',
+              lastName: 'World',
+              phoneNumber: '123-453-1122',
+            })
+        })
+        .then(res => {
+          expect(res.status).to.equal(200)
+          expect(res.body.firstName).to.equal('Hello')
+          expect(res.body.lastName).to.equal('World')
+        })
+    })
+
+    // it('should modify a existing profile 200', () => {})
+    // it(`expects a missing field - 400`, () => {})
+    // it(`can't find a profile to modify`, () => {})
+    // it(`doesn't have permissions to modify profile`, () => {})
   })
 })

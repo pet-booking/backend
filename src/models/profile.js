@@ -4,7 +4,7 @@ import statesArray from '../lib/states'
 const profileSchema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  phoneNumber: { type: String, required: true },
+  phoneNumber: { type: String },
   address: {
     street: { type: String },
     city: { type: String },
