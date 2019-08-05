@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose'
+const { Schema } = require('mongoose')
 
 const scheduleSchema  = new Schema({})
 
-export default scheduleSchema
+module.exports = scheduleSchema

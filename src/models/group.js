@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose'
+const { Schema } = require('mongoose')
 
 const groupSchema = new Schema({})
 
-export default groupSchema
+module.exports = groupSchema

@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose'
+const { Schema } = require('mongoose')
 
 const dogWalkSchema = new Schema({})
 
-export default dogWalkSchema
+module.exports = dogWalkSchema

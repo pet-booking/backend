@@ -13,7 +13,6 @@ const accountSchema = new Schema({
 })
 
 // instance methods
-
 accountSchema.methods.passwordVerify = function(password){
   return bcrypt.compare(password, this.passwordHash)
     .then(correctPassword => {

@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose'
+const { Schema } = require('mongoose')
 
 const clientSchema  = new Schema({})
 
-export default clientSchema
+module.exports = clientSchema

@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+const { Schema } = require('mongoose')
 
 const petSchema = new Schema({
   name: { type: String, required:true },
@@ -9,4 +9,4 @@ const petSchema = new Schema({
   photo: [{ type: String }],
 })
 
-export default petSchema
+module.exports = petSchema

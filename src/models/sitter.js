@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+const { Schema } = require('mongoose')
 
 const sitterSchema = new Schema({
   
@@ -6,4 +6,4 @@ const sitterSchema = new Schema({
 
 })
 
-export default sitterSchema
+module.exports = sitterSchema
