@@ -1,7 +1,7 @@
 'use strict'
 
 const { name, address, image, phone } = require('faker')
-const accountMock = require('./account-mock')
+const accountMock = require('./accountMock')
 const Profile = require('../../src/models/profile')
 
 const profileMock = module.exports = {}
@@ -21,24 +21,10 @@ profileMock.fakeProfile = () => ({
 })
 
 profileMock.create = () => {
-  let result = {}
   return accountMock.create()
-    .then(temp => {
-      result.tempAccount = temp
-      return new Profile({
-        ...profileMock.fakeProfile(),
-        account: result.tempAccount.account._id,
-      }).save()
-    })
-    .then(profile => {
-      result.profile = profile
-      return result
-    })
 }
 
-profileMock.createMany = (num=10) => {
-  return Promise.all(new Array(num).fill(0).map(() => profileMock.create()))
-}
+profileMock.createMany = (num) => {}
 
 profileMock.remove = () => {
   return Profile.deleteMany({})

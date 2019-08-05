@@ -1,7 +1,7 @@
-const { Router } = require('express')
-const httpErrors = require('http-errors')
-const Account = require('../models/account')
-const basicAuth = require('../middleware/basic-auth-middleware')
+import { Router } from 'express'
+import httpErrors from 'http-errors'
+import Account from '../models/account'
+import basicAuth from '../middleware/basic-auth-middleware'
 
 const authRouter =  new Router()
 
@@ -37,4 +37,4 @@ authRouter
       .catch(next)
   })
 
-module.exports = authRouter
+export default authRouter

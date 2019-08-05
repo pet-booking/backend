@@ -6,4 +6,4 @@ const statesArray = [
   'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY',
 ]
 
-module.exports = statesArray
+export default statesArray

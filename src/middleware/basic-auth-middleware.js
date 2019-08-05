@@ -1,7 +1,7 @@
-const httpErrors = require('http-errors')
-const Account = require('../models/account')
+import httpErrors from 'http-errors'
+import Account from '../models/account'
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   if(!req.headers.authorization) 
     return next(httpErrors(400, 'REQUEST_ERROR: Authorization header required'))
 
@@ -24,4 +24,8 @@ module.exports = (req, res, next) => {
       next()
     })
     .catch(next)
+
+
+
+
 }

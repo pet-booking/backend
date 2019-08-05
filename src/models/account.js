@@ -1,8 +1,8 @@
-const { Schema, model } = require('mongoose')
-const bcrypt = require('bcrypt')
-const crypto = require('crypto')
-const jwt = require('jsonwebtoken')
-const httpErrors = require('http-errors')
+import { Schema, model } from 'mongoose'
+import bcrypt from 'bcrypt'
+import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
+import httpErrors from 'http-errors'
 
 const accountSchema = new Schema({
   username:{ type: String, required: true, unique: true },
