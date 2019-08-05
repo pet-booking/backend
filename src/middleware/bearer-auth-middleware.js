@@ -1,9 +1,9 @@
-import { promisify } from 'util'
-import httpErrors from 'http-errors'
-import { verify } from 'jsonwebtoken'
-import Account from '../models/account'
+const { promisify } = require('util')
+const httpErrors = require('http-errors')
+const  { verify } = require('jsonwebtoken')
+const Account = require('../models/account')
 
-export default (req, res, next) => {
+module.exports = (req, res, next) => {
   if(!req.headers.authorization)
     return next(httpErrors(400, 'REQUEST_ERROR: authorization header required'))
   const token = req.headers.authorization.split('Bearer ')[1]

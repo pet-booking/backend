@@ -1,5 +1,5 @@
-import { Schema, model } from 'mongoose'
-import statesArray from '../lib/states'
+const { Schema, model } = require('mongoose')
+const statesArray = require('../lib/states')
 
 const profileSchema = new Schema({
   firstName: { type: String, required: true },
