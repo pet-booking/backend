@@ -1,3 +1,2 @@
-import * as server from './lib/server'
-
+const server = require('./lib/server')
 server.start()

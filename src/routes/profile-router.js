@@ -1,8 +1,8 @@
-import { Router } from 'express'
-import httpErrors from 'http-errors'
-import Profile from '../models/profile'
-import bearerAuth from '../middleware/bearer-auth-middleware'
-import ___MARKER from '../../test/lib/marker'
+const { Router } = require('express')
+const httpErrors = require('http-errors')
+const Profile = require('../models/profile')
+const bearerAuth = require('../middleware/bearer-auth-middleware')
+const ___MARKER = require('../../test/lib/marker')
 
 const fuzzy = (filterTerm) => new RegExp('.*' + filterTerm.toLowerCase()
   .split('').join('.*') + '.*')
@@ -61,4 +61,4 @@ profileRouter
       .catch(next)
   })
 
-export default profileRouter
+module.exports = profileRouter

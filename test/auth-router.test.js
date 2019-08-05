@@ -1,5 +1,5 @@
 require('./lib/setup')
-require('@babel/register')
+// require('@babel/register')
 const expect = require('chai').expect
 const superagent = require('superagent')
 const accountMock = require('./lib/account-mock')
