@@ -1,5 +1,5 @@
 require('./lib/setup')
-require('@babel/register')
+// require('@babel/register')
 // const assert = require('assert')
 const expect = require('chai').expect
 const superagent = require('superagent')

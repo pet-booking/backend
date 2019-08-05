@@ -1,14 +1,14 @@
-import cors from 'cors'
-import morgan from 'morgan'
-import express from 'express'
-import mongoose from 'mongoose'
-import bodyParser from 'body-parser'
+const cors = require('cors')
+const morgan = require('morgan')
+const express = require('express')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
 
-import authRouter from '../routes/auth-router'
-import profileRouter from '../routes/profile-router'
+const authRouter = require('../routes/auth-router')
+const profileRouter = require('../routes/profile-router')
 
-import errorHandler from '../middleware/error-middleware'
-import fourOhFour from '../middleware/four-oh-four'
+const errorHandler = require('../middleware/error-middleware')
+const fourOhFour = require('../middleware/four-oh-four')
 
 const app = express()
 const jsonParser = bodyParser.json()
@@ -23,7 +23,6 @@ app.use(morgan(production ? 'combined' : 'dev'))
 
 // initial route
 app.get('/', (req, res) => {
-  // console.log('HELLO WORLD')
   return res.json({ message: 'TLC Sitters 🐶' })
 })
 
@@ -34,7 +33,7 @@ app.use('/api', profileRouter)
 app.use(fourOhFour)
 app.use(errorHandler)
 
-export const start = () => {
+const start = () => {
   return new Promise((resolve, reject) => {
     if (server)
       return reject(new Error('SERVER_ERROR: server already on'))
@@ -49,7 +48,7 @@ export const start = () => {
     }))
 }
 
-export const stop = () => {
+const stop = () => {
   return new Promise((resolve, reject) => {
     if (!server)
       return reject(new Error('SERVER_ERROR: server already off'))
@@ -61,3 +60,5 @@ export const stop = () => {
   })
     .then(() => mongoose.disconnect())
 }
+
+module.exports = { start, stop }

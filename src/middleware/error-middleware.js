@@ -1,5 +1,5 @@
 // INTERFACE
-export default (err, req, res, next) => {
+module.exports = (err, req, res, next) => {
   // console.error({ err })
   console.log((err.message))
 

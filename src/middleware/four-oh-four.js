@@ -1,7 +1,7 @@
 // DEPENDENCIES
-import createError from 'http-errors'
+const createError = require('http-errors')
 
 // INTERFACE
-export default (req, res, next) => {
+module.exports = (req, res, next) => {
   return next(createError(404, `USER ERROR: ${req.url} not a route`))
 }
