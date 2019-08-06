@@ -34,7 +34,6 @@ profileRouter
       if(!profile)
         throw httpErrors(404, 'REQUEST_ERROR: Profile not found')
       res.json(profile)
-
     }catch(err){
       next(err)
     }
@@ -49,18 +48,19 @@ profileRouter
     }
   })
 
-  .put('/profiles/me', bearerAuth, (req, res, next) => {
-    if (!req.body.firstName || !req.body.lastName)
-      return next(httpErrors(400, 'ERROR: first and last name required'))
-    return Profile.updateOne({ account: req.account._id }, req.body)
-      .setOptions({ new: true, runValidators: true })
-      .then(() => {
-        return Profile.findOne({ account: req.account._id })
-      })
-      .then(profile => {
-        res.json(profile)
-      })
-      .catch(next)
+  .put('/profiles/me', bearerAuth, async (req, res, next) => {
+    try {
+      if (!req.body.firstName || !req.body.lastName)
+        throw httpErrors(400, 'ERROR: first and last name required')
+
+      await Profile.updateOne({ account: req.account._id }, req.body)
+        .setOptions({ new: true, runValidators: true })
+
+      const profile = await Profile.findOne({ account: req.account._id })
+      res.json(profile)
+    } catch (err) {
+      next(err)
+    }
   })
 
 module.exports = profileRouter
