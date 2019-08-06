@@ -7,13 +7,12 @@ const server = require('../src/lib/server')
 
 const apiURL = `http://localhost:${process.env.PORT}`
 
-
-describe('### Server file ###', ()=> {
+describe('### Server file ###', () => {
   before(server.start)
   after(server.stop)
 
-  describe('root route - 200', ()=>{
-    it('expect root message', ()=>{
+  describe('root route - 200', () => {
+    it('expect root message', () => {
       return superagent.get(apiURL)
         .then(res => {
           expect(res.status).to.equal(200)
@@ -21,7 +20,7 @@ describe('### Server file ###', ()=> {
         })
     })
 
-    it('expect route not found - 404', ()=>{
+    it('expect route not found - 404', () => {
       return superagent.get(`${apiURL}/not_real`)
         .then(Promise.reject)
         .catch(res => {

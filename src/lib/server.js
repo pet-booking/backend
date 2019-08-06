@@ -42,9 +42,9 @@ const start = () => {
       return resolve()
     })
   })
-    .then(() => mongoose.connect(process.env.MONGODB_URI, { 
+    .then(() => mongoose.connect(process.env.MONGODB_URI, {
       useCreateIndex: true,
-      useNewUrlParser: true, 
+      useNewUrlParser: true,
     }))
 }
 

@@ -13,11 +13,10 @@ const accountSchema = new Schema({
 })
 
 // instance methods
-
-accountSchema.methods.passwordVerify = function(password){
+accountSchema.methods.passwordVerify = function(password) {
   return bcrypt.compare(password, this.passwordHash)
     .then(correctPassword => {
-      if(!correctPassword) 
+      if(!correctPassword)
         throw httpErrors(401, 'AUTH_ERROR: incorrect password')
       return this
     })
@@ -51,7 +50,7 @@ Account.create = function(data){
   // data
   let { password } = data
   delete data.password
-  
+
   return bcrypt.hash(password, 10)
     .then(passwordHash => {
       data.passwordHash = passwordHash
