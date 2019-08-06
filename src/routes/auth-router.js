@@ -6,16 +6,15 @@ const basicAuth = require('../middleware/basic-auth-middleware')
 const authRouter =  new Router()
 
 authRouter
-  .post('/auth', (req, res, next) => {
-    Account.create(req.body)
-      .then(account => {
-        return account.tokenCreate()
-      })
-      .then(token => {
-        res.cookie('X-TLC-Token', token, { maxAge: 604800000 })
-        return res.json({ token })
-      })
-      .catch(next)
+  .post('/auth', async (req, res, next)=> {
+    try {
+      const account = await Account.create(req.body)
+      const token = await account.tokenCreate()
+      res.cookie('X-TLC-Token', token, { maxAge: 604800000 })
+      return res.json({ token })
+    } catch (err) {
+      next(err)
+    }
   })
 
   .get('/auth', basicAuth, (req, res, next) => {
