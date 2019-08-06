@@ -38,22 +38,15 @@ profileRouter
     }catch(err){
       next(err)
     }
-
-    // return Profile.findOne({ account: req.account._id })
-    //   .then(profile => {
-    //     if(!profile)
-    //       throw httpErrors(404, 'REQUEST_ERROR: Profile not found')
-    //     res.json(profile)
-    //   })
-    //   .catch(next)
   })
 
-  .get('/profiles/:id', bearerAuth, (req, res, next) => {
-    return Profile.findById(req.params.id)
-      .then(profile => {
-        res.json(profile)
-      })
-      .catch(next)
+  .get('/profiles/:id', bearerAuth, async (req, res, next) => {
+    try {
+      const profile = await Profile.findById(req.params.id)
+      res.json(profile)
+    } catch(err){
+      next(err)
+    }
   })
 
   .put('/profiles/me', bearerAuth, (req, res, next) => {
