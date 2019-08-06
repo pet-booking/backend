@@ -11,53 +11,43 @@ const accountSchema = new Schema({
   tokenSeed:{ type: String, required: true, unique: true },
   created:{ type: Date, default: () => new Date() },
 })
-
 // instance methods
-accountSchema.methods.passwordVerify = function(password) {
-  return bcrypt.compare(password, this.passwordHash)
-    .then(correctPassword => {
-      if(!correctPassword)
-        throw httpErrors(401, 'AUTH_ERROR: incorrect password')
-      return this
-    })
+accountSchema.methods.passwordVerify = async function(password) {
+  const correctPassword = await bcrypt.compare(password, this.passwordHash)
+  if(!correctPassword)
+    throw httpErrors(401, 'AUTH_ERROR: incorrect password')
+  return this
 }
 
-accountSchema.methods.tokenCreate = function(){
-  // replaces the token for another token
+accountSchema.methods.tokenCreate = async function(){
   this.tokenSeed = crypto.randomBytes(64).toString('hex')
-  return this.save()
-    .then(account => {
-      const options = { expiresIn: '7d' }
-      return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.CLOUD_SECRET, options)
-    })
+  const account = await this.save()
+  const options = { expiresIn: '7d' }
+  return jwt.sign({ tokenSeed: account.tokenSeed }, process.env.CLOUD_SECRET, options)
+
 }
 
-accountSchema.methods.update = function(data){
+accountSchema.methods.update = async function(data){
   let { password } = data
   delete data.password
-  return bcrypt.hash(password, 10)
-    .then(passwordHash => {
-      this.username = data.username
-      this.email = data.email
-      this.passwordHash = passwordHash
-      return this.save()
-    })
+  const passwordHash = await bcrypt.hash(password, 10)
+  this.username = data.username
+  this.email = data.email
+  this.passwordHash = passwordHash
+  return this.save()
 }
 
 const Account = model('account', accountSchema)
 
-Account.create = function(data){
-  // data
+Account.create = async function(data){
   let { password } = data
   delete data.password
-
-  return bcrypt.hash(password, 10)
-    .then(passwordHash => {
-      data.passwordHash = passwordHash
-      // generate a token
-      data.tokenSeed = crypto.randomBytes(64).toString('hex')
-      return new Account(data).save()
-    })
+  const accountData = {
+    ...data,
+    passwordHash: await bcrypt.hash(password, 10),
+    tokenSeed: crypto.randomBytes(64).toString('hex'),
+  }
+  return new Account(accountData).save()
 }
 
 module.exports = Account

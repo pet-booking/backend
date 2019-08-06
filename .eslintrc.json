@@ -4,6 +4,7 @@
       "error", "single", { "allowTemplateLiterals": true }
     ],
     "no-multi-spaces": "warn",
+    "require-atomic-updates": "error",
     "no-trailing-spaces": "error",
     "no-multiple-empty-lines":
     ["error", { "max": 1, "maxEOF": 1, "maxBOF": 1}],
