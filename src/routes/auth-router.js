@@ -3,10 +3,10 @@ const httpErrors = require('http-errors')
 const Account = require('../models/account')
 const basicAuth = require('../middleware/basic-auth-middleware')
 
-const authRouter =  new Router()
+const authRouter = new Router()
 
 authRouter
-  .post('/auth', async (req, res, next)=> {
+  .post('/auth', async (req, res, next) => {
     try {
       const account = await Account.create(req.body)
       const token = await account.tokenCreate()
@@ -25,7 +25,7 @@ authRouter
       })
       .catch(next)
   })
-  
+
   .put('/auth', basicAuth, (req, res, next) => {
     if(!req.body.username || !req.body.email || !req.body.password)
       return next(httpErrors(400, 'REQUEST_ERROR: username, email, and password required'))

@@ -7,7 +7,7 @@ const server = require('../src/lib/server')
 
 const apiURL = `http://localhost:${process.env.PORT}/api/auth`
 
-describe('### Auth Route ###', ()=> {
+describe('### Auth Route ###', () => {
   before(server.start)
   afterEach(accountMock.remove)
   after(server.stop)
@@ -21,7 +21,7 @@ describe('### Auth Route ###', ()=> {
           password: 'sharkies',
         })
         .then(res => {
-          expect(res.status).to.equal( 200)
+          expect(res.status).to.equal(200)
           expect(res.body.token).to.exist
         })
     })
@@ -59,7 +59,7 @@ describe('### Auth Route ###', ()=> {
     })
   })
 
-  describe('GET', ()=>{
+  describe('GET', () => {
     it('expects to get a user - 200', () => {
       const { password } = accountMock.fakeUser()
 
@@ -71,7 +71,7 @@ describe('### Auth Route ###', ()=> {
           expect(res.status).to.equal(200)
           expect(res.body.token).to.exist
         })
-    }) 
+    })
 
     it('expect unauthorized error - 401', () => {
       return accountMock.create()
@@ -90,7 +90,7 @@ describe('### Auth Route ###', ()=> {
         })
     })
 
-    it('expect basic auth to be used - 400', ()=> {
+    it('expect basic auth to be used - 400', () => {
       return accountMock.create()
         .then(mock => superagent.get(apiURL)
           .set('Authorization',`Bearer ${mock.token}`))
@@ -109,7 +109,7 @@ describe('### Auth Route ###', ()=> {
     })
   })
 
-  describe('PUT', ()=>{
+  describe('PUT', () => {
     it('expect new user email - 200', () => {
       return superagent.post(apiURL)
         .send({

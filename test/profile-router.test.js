@@ -8,7 +8,7 @@ const profileMock = require('./lib/profile-mock')
 
 const apiURL = `http://localhost:${process.env.PORT}/api/profiles`
 
-describe('### Profile Route ###', ()=> {
+describe('### Profile Route ###', () => {
   before(server.start)
   // afterEach(profileMock.remove)
   after(server.stop)
@@ -38,7 +38,7 @@ describe('### Profile Route ###', ()=> {
         })
     })
 
-    it('expect unauthorized - invalid - 401',  () => {
+    it('expect unauthorized - invalid - 401', () => {
       const fakeProfile = profileMock.fakeProfile()
       return superagent.post(apiURL)
         .set('Authorization', `Bearer Bad Token`)
@@ -49,7 +49,7 @@ describe('### Profile Route ###', ()=> {
         })
     })
 
-    it('expect unauthorized - bad token - 401',  () => {
+    it('expect unauthorized - bad token - 401', () => {
       const fakeProfile = profileMock.fakeProfile()
       return superagent.post(apiURL)
         .set('Authorization', `Bad Token`)
@@ -60,7 +60,7 @@ describe('### Profile Route ###', ()=> {
         })
     })
 
-    it('expect bad request - missing authorization header- 400',  () => {
+    it('expect bad request - missing authorization header- 400', () => {
       const fakeProfile = profileMock.fakeProfile()
       return superagent.post(apiURL)
         .send(fakeProfile)
@@ -69,7 +69,7 @@ describe('### Profile Route ###', ()=> {
           expect(res.status).to.equal(400)
         })
     })
-    
+
     it('expect account does not exist - 404', () => {
       const fakeProfile = profileMock.fakeProfile()
       let token
@@ -78,7 +78,7 @@ describe('### Profile Route ###', ()=> {
           token = account.token
           return profileMock.remove()
         })
-        .then(()=> {
+        .then(() => {
           return superagent.post(apiURL)
             .set('Authorization', `Bearer ${token}`)
             .send(fakeProfile)
@@ -88,8 +88,8 @@ describe('### Profile Route ###', ()=> {
           expect(res.status).to.equal(404)
         })
     })
-    
-    it('expect error required field missing - 400', ()=>{
+
+    it('expect error required field missing - 400', () => {
       const fakeProfile = profileMock.fakeProfile()
       delete fakeProfile.firstName
       delete fakeProfile.lastName
@@ -120,7 +120,7 @@ describe('### Profile Route ###', ()=> {
             .set('Authorization', `Bearer ${mockAccount.tempAccount.token}`)
         })
         .then(res => {
-          const { 
+          const {
             firstName, lastName, _id, address, bio, account, phoneNumber,
           } = mockAccount.profile
           expect(res.status).to.equal(200)
@@ -137,7 +137,7 @@ describe('### Profile Route ###', ()=> {
         })
     })
 
-    it(`can't find profile/me - 404`,  () => {
+    it(`can't find profile/me - 404`, () => {
       let token
       return accountMock.create()
         .then(temp => {
@@ -172,7 +172,7 @@ describe('### Profile Route ###', ()=> {
             .set('Authorization', `Bearer ${temp.tempAccount.token}`)
         })
         .then(res => {
-          const { 
+          const {
             firstName, lastName, _id, address, bio, account, phoneNumber,
           } = mockAccount.profile
           expect(res.status).to.equal(200)

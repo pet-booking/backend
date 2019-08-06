@@ -2,11 +2,11 @@ const httpErrors = require('http-errors')
 const Account = require('../models/account')
 
 module.exports = (req, res, next) => {
-  if(!req.headers.authorization) 
+  if(!req.headers.authorization)
     return next(httpErrors(400, 'REQUEST_ERROR: Authorization header required'))
 
   const encoded = req.headers.authorization.split('Basic ')[1]
-  if (!encoded) 
+  if (!encoded)
     return next(httpErrors(400, 'REQUEST_ERROR: Basic auth required'))
 
   const decoded = Buffer.from(encoded, 'base64').toString()
