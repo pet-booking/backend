@@ -11,6 +11,8 @@
     "dbon": "mkdir -p ./db && mongod --dbpath ./db",
     "dboff": "killall mongod",
     "test": "mocha",
+    "test-watch": "nodemon --exec \"mocha -R min\"",
+    
     "coverage": "nyc npm run test"
   },
   "repository": {
@@ -47,6 +49,7 @@
     "faker": "^4.1.0",
     "jest": "^24.8.0",
     "mocha": "^6.2.0",
+    "nodemon": "^1.19.1",
     "nyc": "^14.1.1"
   }
 }
