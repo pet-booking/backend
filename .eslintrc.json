@@ -4,6 +4,7 @@
       "error", "single", { "allowTemplateLiterals": true }
     ],
     "no-multi-spaces": "warn",
+    "comma-spacing": ["warn", { "before": false, "after": true }],
     "require-atomic-updates": "error",
     "no-trailing-spaces": "error",
     "no-multiple-empty-lines":

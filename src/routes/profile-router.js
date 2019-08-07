@@ -17,9 +17,9 @@ profileRouter
         account: req.account._id,
         photo: undefined,
       }).save()
-      res.json(profile)
+      return res.json(profile)
     } catch (err) {
-      next(err)
+      return next(err)
     }
   })
 
@@ -33,18 +33,18 @@ profileRouter
       const profile = await Profile.findOne({ account: req.account._id })
       if(!profile)
         throw httpErrors(404, 'REQUEST_ERROR: Profile not found')
-      res.json(profile)
+      return res.json(profile)
     }catch(err){
-      next(err)
+      return next(err)
     }
   })
 
   .get('/profiles/:id', bearerAuth, async (req, res, next) => {
     try {
       const profile = await Profile.findById(req.params.id)
-      res.json(profile)
+      return res.json(profile)
     } catch(err){
-      next(err)
+      return next(err)
     }
   })
 
@@ -57,9 +57,9 @@ profileRouter
         .setOptions({ new: true, runValidators: true })
 
       const profile = await Profile.findOne({ account: req.account._id })
-      res.json(profile)
+      return res.json(profile)
     } catch (err) {
-      next(err)
+      return next(err)
     }
   })
 

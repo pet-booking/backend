@@ -13,137 +13,134 @@ describe('### Auth Route ###', () => {
   after(server.stop)
 
   describe('POST', () => {
-    it('expects to create a user - 200', () => {
-      return superagent.post(apiURL)
+    it('expects to create a user - 200', async () => {
+      const res = await superagent.post(apiURL)
         .send({
           username: 'shark',
           email: 'shark@inthedark.com',
           password: 'sharkies',
         })
-        .then(res => {
-          expect(res.status).to.equal(200)
-          expect(res.body.token).to.exist
-        })
+      expect(res.status).to.equal(200)
+      expect(res.body.token).to.exist
     })
 
-    it('expects an error - missing field - 400', () => {
-      return superagent.post(apiURL)
-        .send({
-          username: 'shark',
-          password: 'sharkies',
-        })
-        .then(Promise.reject)
-        .catch(res => {
-          expect(res.status).to.equal(400)
-        })
+    it('expects an error - missing field - 400', async () => {
+      try {
+        return await superagent.post(apiURL)
+          .send({
+            username: 'shark',
+            password: 'sharkies',
+          })
+      }
+      catch (res) {
+        expect(res.status).to.equal(400)
+      }
     })
 
-    it('expects an error - conflict - 409', () => {
-      return superagent.post(apiURL)
-        .send({
-          username: 'shark',
-          email: 'shark@inthedark.com',
-          password: 'sharkies',
-        })
-        .then(() => superagent.post(apiURL)
+    it('expects an error - conflict - 409', async () => {
+      try {
+        await superagent.post(apiURL)
           .send({
             username: 'shark',
             email: 'shark@inthedark.com',
             password: 'sharkies',
           })
-        )
-        .then(Promise.reject)
-        .catch(res => {
-          expect(res.status).to.equal(409)
-        })
+        return await superagent.post(apiURL)
+          .send({
+            username: 'shark',
+            email: 'shark@inthedark.com',
+            password: 'sharkies',
+          })
+      }
+      catch (res) {
+        expect(res.status).to.equal(409)
+      }
     })
   })
 
   describe('GET', () => {
-    it('expects to get a user - 200', () => {
+    it('expects to get a user - 200', async () => {
       const { password } = accountMock.fakeUser()
 
-      return accountMock.create(password)
-        .then(mock => superagent.get(apiURL)
-          .auth(mock.username, password)
-        )
-        .then(res => {
-          expect(res.status).to.equal(200)
-          expect(res.body.token).to.exist
-        })
+      const mock = await accountMock.create(password)
+      const res = await superagent.get(apiURL)
+        .auth(mock.username, password)
+      expect(res.status).to.equal(200)
+      expect(res.body.token).to.exist
     })
 
-    it('expect unauthorized error - 401', () => {
-      return accountMock.create()
-        .then(mock => superagent.get(apiURL).auth(mock.username, 'lulwat'))
-        .then(Promise.reject)
-        .catch(res => {
-          expect(res.status).to.equal(401)
-        })
+    it('expect unauthorized error - 401', async () => {
+      try {
+        const mock = await accountMock.create()
+        return await superagent.get(apiURL).auth(mock.username, 'lulwat')
+      }
+      catch (res) {
+        expect(res.status).to.equal(401)
+      }
     })
 
-    it('expect user not be found - 404', () => {
-      superagent.get(apiURL).auth('fakeuser', 'lulwat')
-        .then(Promise.reject)
-        .catch(res => {
-          expect(res.status).to.equal(404)
-        })
+    it('expect user not be found - 404', async () => {
+      try {
+        return await superagent.get(apiURL).auth('fakeuser', 'lulwat')
+      }
+      catch (res) {
+        expect(res.status).to.equal(404)
+      }
     })
 
-    it('expect basic auth to be used - 400', () => {
-      return accountMock.create()
-        .then(mock => superagent.get(apiURL)
-          .set('Authorization',`Bearer ${mock.token}`))
-        .then(Promise.reject)
-        .catch(res => {
-          expect(res.status).to.equal(400)
-        })
+    it('expect basic auth to be used - 400', async () => {
+      try {
+        const mock = await accountMock.create()
+        return await superagent.get(apiURL)
+          .set('Authorization', `Bearer ${mock.token}`)
+      }
+      catch (res) {
+        expect(res.status).to.equal(400)
+      }
     })
 
-    it('expect auth header required - 400', () => {
-      return superagent.get(apiURL)
-        .then(Promise.reject)
-        .catch(res => {
-          expect(res.status).to.equal(400)
-        })
+    it('expect auth header required - 400', async () => {
+      try {
+        return await superagent.get(apiURL)
+      }
+      catch (res) {
+        expect(res.status).to.equal(400)
+      }
     })
   })
 
   describe('PUT', () => {
-    it('expect new user email - 200', () => {
-      return superagent.post(apiURL)
+    it('expect new user email - 200', async () => {
+      await superagent.post(apiURL)
         .send({
           username: 'hello',
           password: 'world',
           email: 'hello@world.edu',
         })
-        .then(() => superagent.put(apiURL)
-          .auth('hello', 'world')
-          .send({
-            username: 'hello',
-            password: 'world',
-            email: 'hello@world.net',
-          })
-        )
-        .then(res => {
-          expect(res.status).to.equal(200)
+      const res = await superagent.put(apiURL)
+        .auth('hello', 'world')
+        .send({
+          username: 'hello',
+          password: 'world',
+          email: 'hello@world.net',
         })
+      expect(res.status).to.equal(200)
     })
 
-    it('expect missing value - 400', () => {
+    it('expect missing value - 400', async () => {
       const { password } = accountMock.fakeUser()
-      return accountMock.create(password)
-        .then(account => superagent.put(apiURL)
+      try {
+        const account = await accountMock.create(password)
+        return await superagent.put(apiURL)
           .auth(account.username, password)
           .send({
             username: 'hello',
             password: 'world',
           })
-        )
-        .then(Promise.reject)
-        .catch(res => {
-          expect(res.status).to.equal(400)
-        })
+      }
+      catch (res) {
+        expect(res.status).to.equal(400)
+      }
     })
   })
 })

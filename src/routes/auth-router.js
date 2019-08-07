@@ -13,7 +13,7 @@ authRouter
       res.cookie('X-TLC-Token', token, { maxAge: 604800000 })
       return res.json({ token })
     } catch (err) {
-      next(err)
+      return next(err)
     }
   })
 
@@ -23,18 +23,18 @@ authRouter
       res.cookie('X-TLC-Token', token, { maxAge: 604800000 })
       return res.json({ token })
     } catch (err) {
-      next(err)
+      return next(err)
     }
   })
 
   .put('/auth', basicAuth, async (req, res, next) => {
     try {
       if(!req.body.username || !req.body.email || !req.body.password)
-        return next(httpErrors(400, 'REQUEST_ERROR: username, email, and password required'))
+        throw httpErrors(400, 'REQUEST_ERROR: username, email, and password required')
       await req.account.update(req.body)
       res.sendStatus(200)
     } catch (err) {
-      next(err)
+      return next(err)
     }
   })
 
