@@ -1,8 +1,9 @@
 const cors = require('cors')
 const morgan = require('morgan')
 const express = require('express')
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
+const jsonParser = require('body-parser').json
+
+const mongo = require('./mongo')
 
 const authRouter = require('../routes/auth-router')
 const profileRouter = require('../routes/profile-router')
@@ -11,13 +12,11 @@ const errorHandler = require('../middleware/error-middleware')
 const fourOhFour = require('../middleware/four-oh-four')
 
 const app = express()
-const jsonParser = bodyParser.json()
 const production = process.env.NODE_ENV === 'dev'
-let server = null
 console.log('NODE_ENV:', process.env.NODE_ENV)
 
 // REGISTER MIDDLEWARE
-app.use(jsonParser)
+app.use(jsonParser())
 app.use(cors({ origin: process.env.CORS_ORIGIN }))
 app.use(morgan(production ? 'combined' : 'dev'))
 
@@ -33,32 +32,42 @@ app.use('/api', profileRouter)
 app.use(fourOhFour)
 app.use(errorHandler)
 
+const state = {
+  isOn: false,
+  server: null,
+}
+
 const start = () => {
   return new Promise((resolve, reject) => {
-    if (server)
+    if (state.isOn)
       return reject(new Error('SERVER_ERROR: server already on'))
-    server = app.listen(process.env.PORT, () => {
-      console.log('__SERVER_ON__ @', process.env.PORT)
-      return resolve()
-    })
+    state.isOn = true
+    mongo.start()
+      .then(() => {
+        state.server = app.listen(process.env.PORT, () => {
+          console.log('__SERVER_ON__ @', process.env.PORT)
+          resolve()
+        })
+      })
+      .catch(reject)
   })
-    .then(() => mongoose.connect(process.env.MONGODB_URI, {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-    }))
 }
 
 const stop = () => {
   return new Promise((resolve, reject) => {
-    if (!server)
+    if (!state.isOn)
       return reject(new Error('SERVER_ERROR: server already off'))
-    server.close(() => {
-      server = null
-      console.log('__SERVER_OFF__')
-      return resolve()
-    })
+    mongo.stop()
+      .then(() => {
+        state.isOn = false
+        state.server.close(() => {
+          state.server = null
+          console.log('__SERVER_OFF__')
+          resolve()
+        })
+      })
+      .catch(reject)
   })
-    .then(() => mongoose.disconnect())
 }
 
 module.exports = { start, stop }
