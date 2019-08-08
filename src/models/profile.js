@@ -23,4 +23,4 @@ const profileSchema = new Schema({
   account: { type: Schema.Types.ObjectId, required: true, unique: true },
 })
 
-module.exports =  model('profile', profileSchema)
+module.exports = model('profile', profileSchema)

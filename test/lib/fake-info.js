@@ -23,7 +23,7 @@ const fakeProfile = () => ({
 })
 
 const fakeInfo = {
-  ...fakeUser(), 
+  ...fakeUser(),
   ...fakeProfile(),
 }
 

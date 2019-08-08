@@ -1,6 +1,6 @@
 const { promisify } = require('util')
 const httpErrors = require('http-errors')
-const  { verify } = require('jsonwebtoken')
+const { verify } = require('jsonwebtoken')
 const Account = require('../models/account')
 
 module.exports = (req, res, next) => {

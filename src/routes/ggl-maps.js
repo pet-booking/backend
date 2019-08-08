@@ -7,8 +7,7 @@ const googleMapsClient = require('@google/maps').createClient({
   Promise: Promise,
 })
 
-
-gglMap.get('/getgeo', (req, res, next)=>{
+gglMap.get('/getgeo', (req, res, next) => {
   googleMapsClient.geocode({ address: '12th Ave S, Seattle, WA 98144' })
     .asPromise()
     .then((response) => {
