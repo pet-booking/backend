@@ -12,29 +12,30 @@ describe('### Auth Route ###', () => {
   after(server.stop)
 
   describe('POST', () => {
-    it('expects to create a user - 200', async () => {
-      const result = await superagent.post(apiURL)
+    it('expects to create a user - 200', () => {
+      return superagent.post(apiURL)
         .send({
           username: 'shark',
           email: 'shark@inthedark.com',
           password: 'sharkies',
         })
-
-      expect(result.status).to.equal(200)
-      expect(result.body.token).to.exist
-
+        .then(res => {
+          expect(res.status).to.equal(200)
+          expect(res.body.token).to.exist
+        })
     })
 
-    it('expects an error - missing field - 400', () => {
-      return superagent.post(apiURL)
-        .send({
-          username: 'shark',
-          password: 'sharkies',
-        })
-        .then(Promise.reject)
-        .catch(res => {
-          expect(res.status).to.equal(400)
-        })
+    it('expects an error - missing field - 400', async () => {
+      try {
+        return await superagent.post(apiURL)
+          .send({
+            username: 'shark',
+            password: 'sharkies',
+          })
+      }
+      catch (res) {
+        expect(res.status).to.equal(400)
+      }
     })
 
     it('expects an error - conflict - 409', () => {
