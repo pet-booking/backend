@@ -16,12 +16,13 @@ describe('### Server file ###', () => {
       expect(res.body.message).to.exist
     })
 
-    it('expect route not found - 404', () => {
-      return superagent.get(`${apiURL}/not_real`)
-        .then(Promise.reject)
-        .catch(res => {
-          console.log('STATUS -->', res.status)
-        })
+    it('expect route not found - 404', async () => {
+      try{
+        return await superagent.get(`${apiURL}/not_real`)
+      }
+      catch(err) {
+        expect(err.status).to.equal(404)
+      }
     })
   })
 })
