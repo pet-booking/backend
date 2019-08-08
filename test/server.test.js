@@ -1,6 +1,4 @@
 require('./lib/setup')
-// require('@babel/register')
-// const assert = require('assert')
 const expect = require('chai').expect
 const superagent = require('superagent')
 const server = require('../src/lib/server')
@@ -12,12 +10,10 @@ describe('### Server file ###', () => {
   after(server.stop)
 
   describe('root route - 200', () => {
-    it('expect root message', () => {
-      return superagent.get(apiURL)
-        .then(res => {
-          expect(res.status).to.equal(200)
-          expect(res.body.message).to.exist
-        })
+    it('expect root message', async () => {
+      const res = await superagent.get(apiURL)
+      expect(res.status).to.equal(200)
+      expect(res.body.message).to.exist
     })
 
     it('expect route not found - 404', () => {
