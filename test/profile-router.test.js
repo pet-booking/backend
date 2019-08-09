@@ -159,7 +159,6 @@ describe('### Profile Route ###', () => {
 
     it('should get a profile:id - 200', async () => {
       const mock = await profileMock.create()
-
       const res = await superagent.get(`${apiURL}/${mock.profile._id}`)
         .set('Authorization', `Bearer ${mock.tempAccount.token}`)
 
@@ -285,16 +284,13 @@ describe('### Profile Route ###', () => {
     it.only('should modify a existing profile:id - 200', async () => {
       const myMock = await profileMock.create()
       const otherMock = await profileMock.create()
-
-      const res = await superagent.put(`${apiURL}/${otherMock.profile.account}`)
+      const res = await superagent.put(`${apiURL}/${otherMock.profile._id}`)
         .set('Authorization', `Bearer ${myMock.tempAccount.token}`)
         .send({
           firstName: 'Jenny',
           lastName: 'Tutone',
           phoneNumber: '206-867-5309',
         })
-
-      console.log(res.body)
       expect(res.status).to.equal(200)
       expect(res.body.firstName).to.equal('Jenny')
       expect(res.body.lastName).to.equal('Tutone')
