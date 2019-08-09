@@ -285,7 +285,8 @@ describe('### Profile Route ###', () => {
     it.only('should modify a existing profile:id - 200', async () => {
       const myMock = await profileMock.create()
       const otherMock = await profileMock.create()
-      const res = await superagent.put(`${apiURL}/${otherMock.profile._id}`)
+
+      const res = await superagent.put(`${apiURL}/${otherMock.profile.account}`)
         .set('Authorization', `Bearer ${myMock.tempAccount.token}`)
         .send({
           firstName: 'Jenny',
@@ -293,6 +294,7 @@ describe('### Profile Route ###', () => {
           phoneNumber: '206-867-5309',
         })
 
+      console.log(res.body)
       expect(res.status).to.equal(200)
       expect(res.body.firstName).to.equal('Jenny')
       expect(res.body.lastName).to.equal('Tutone')
