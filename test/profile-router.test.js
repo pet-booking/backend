@@ -34,38 +34,44 @@ describe('### Profile Route ###', () => {
     })
 
     it('expect unauthorized - invalid - 401', async () => {
+      let res
       const fakeProfile = profileMock.fakeProfile()
       try {
-        await superagent.post(apiURL)
+        res = await superagent.post(apiURL)
           .set('Authorization', `Bearer Bad Token`)
           .send(fakeProfile)
       }
-      catch (res) {
-        expect(res.status).to.equal(401)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(401)
     })
 
     it('expect unauthorized - bad token - 401', async () => {
+      let res
       const fakeProfile = profileMock.fakeProfile()
       try{
-        await superagent.post(apiURL)
+        res = await superagent.post(apiURL)
           .set('Authorization', `Bad Token`)
           .send(fakeProfile)
       }
-      catch(res) {
-        expect(res.status).to.equal(401)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(401)
     })
 
     it('expect bad request - missing authorization header- 400', async () => {
+      let res
       const fakeProfile = profileMock.fakeProfile()
       try {
-        await superagent.post(apiURL)
+        res = await superagent.post(apiURL)
           .send(fakeProfile)
       }
-      catch (res) {
-        expect(res.status).to.equal(400)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(400)
     })
 
     it('expect account does not exist - 404', async () => {
@@ -84,24 +90,26 @@ describe('### Profile Route ###', () => {
     })
 
     it('expect error required field missing - 400', async () => {
+      let res
       const fakeProfile = profileMock.fakeProfile()
       delete fakeProfile.firstName
       delete fakeProfile.lastName
 
       try {
         const mock = await accountMock.create()
-        await superagent.post(apiURL)
+        res = await superagent.post(apiURL)
           .set('Authorization', `Bearer ${mock.token}`)
           .send(fakeProfile)
       }
-      catch(res){
-        expect(res.status).to.equal(400)
+      catch(err){
+        res = err
       }
+      expect(res.status).to.equal(400)
     })
   })
 
   describe('GET', () => {
-    it('expect to get my profile - 200', async () => {
+    it('expect to get profile/me - 200', async () => {
       const mock = await profileMock.create()
       const res = await superagent.get(`${apiURL}/me`)
         .set('Authorization', `Bearer ${mock.tempAccount.token}`)
@@ -125,27 +133,31 @@ describe('### Profile Route ###', () => {
     })
 
     it(`can't find profile/me - 404`, async () => {
+      let res
       try{
         const temp = await accountMock.create()
-        await superagent.get(`${apiURL}/me`)
+        res = await superagent.get(`${apiURL}/me`)
           .set('Authorization', `Bearer ${temp.token}`)
       }
-      catch(res) {
-        expect(res.status).to.equal(404)
+      catch(err) {
+        res = err
       }
+      expect(res.status).to.equal(404)
     })
 
     it(`can't access a profile/me - unauthorized - 401`, async () => {
+      let res
       try {
-        await superagent.get(`${apiURL}/me`)
+        res = await superagent.get(`${apiURL}/me`)
           .set('Authorization', `Bearer FakeAssToken`)
       }
-      catch(res){
-        expect(res.status).to.equal(401)
+      catch(err){
+        res = err
       }
+      expect(res.status).to.equal(401)
     })
 
-    it('should get a profile based on the id - 200', async () => {
+    it('should get a profile:id - 200', async () => {
       const mock = await profileMock.create()
 
       const res = await superagent.get(`${apiURL}/${mock.profile._id}`)
@@ -168,15 +180,31 @@ describe('### Profile Route ###', () => {
       expect(res.body.account).to.equal(account._id.toString())
     })
 
-    it(`can't find a profile by id - 404`, async () => {
+    it(`can't find a profile:id - 404`, async () => {
+      let res
       try{
         const mock = await accountMock.create()
-        await superagent.get(`${apiURL}/FakeProfileId`)
+        res = await superagent.get(`${apiURL}/FakeProfileId`)
           .set('Authorization', `Bearer ${mock.token}`)
       }
-      catch(res){
-        expect(res.status).to.equal(404)
+      catch(err){
+        res = err
       }
+      expect(res.status).to.equal(404)
+    })
+
+    it(`can't access a profile:id - unauthorized - 401`, async () => {
+      let res
+      try {
+        const mock = await profileMock.create()
+        res = await superagent.get(`${apiURL}/${mock.profile._id}`)
+          .set('Authorization', `Bearer FakeAssToken`)
+      }
+      catch(err){
+        res = err
+      }
+      expect(res.status).to.equal(401)
+
     })
 
     it('creates 20 fake accounts', async () => {
@@ -187,7 +215,7 @@ describe('### Profile Route ###', () => {
   })
 
   describe('PUT', () => {
-    it('should modify profile/me', async () => {
+    it('should modify profile/me - 200', async () => {
       const mock = await profileMock.create()
       const res = await superagent.put(`${apiURL}/me`)
         .set('Authorization', `Bearer ${mock.tempAccount.token}`)
@@ -200,11 +228,63 @@ describe('### Profile Route ###', () => {
       expect(res.status).to.equal(200)
       expect(res.body.firstName).to.equal('Hello')
       expect(res.body.lastName).to.equal('World')
+      expect(res.body.phoneNumber).to.equal('123-453-1122')
     })
 
-    // it('should modify a existing profile 200', () => {})
-    // it(`expects a missing field - 400`, () => {})
-    // it(`can't find a profile to modify`, () => {})
-    // it(`doesn't have permissions to modify profile`, () => {})
+    it(`expects a missing field profile/me - 400`, async () => {
+      let res
+      try {
+        const mock = await profileMock.create()
+        res = await superagent.put(`${apiURL}/me`)
+          .set('Authorization', `Bearer ${mock.tempAccount.token}`)
+          .send({
+            lastName: 'World',
+            phoneNumber: '123-453-1122',
+          })
+      } catch (err) {
+        res = err
+      }
+      expect(res.status).to.equal(400)
+    })
+
+    it(`can't find a profile/me to modify - 404`, async () => {
+      let res
+      try{
+        const mock = await accountMock.create()
+        res = await superagent.put(`${apiURL}/me`)
+          .set('Authorization', `Bearer ${mock.token}`)
+          .send({
+            firstName: 'Hello',
+            lastName: 'World',
+            phoneNumber: '123-453-1122',
+          })
+      } catch (err){
+        res = err
+      }
+      expect(res.status).to.equal(404)
+    })
+
+    it(`doesn't have permissions to modify profile/me - 401`, async () => {
+      let res
+      try {
+        const mock = await profileMock.create()
+        res = await superagent.put(`${apiURL}/me`)
+          .set('Authorization', `Bearer FakePass`)
+          .send({
+            firstName: 'Hello',
+            lastName: 'World',
+            phoneNumber: '123-453-1122',
+          })
+      }
+      catch(err){
+        res = err
+      }
+      expect(res.status).to.equal(401)
+    })
+    // it('should modify a existing profile:id 200', () => { expect(200).to.equal(200) })
+    // it(`expects a missing field profile:id - 400`, () => {expect(400).to.equal(400)})
+    // it(`can't find a profile:id to modify 404`, () => {expect(404).to.equal(404)})
+    // it(`doesn't have permissions to modify profile:id - 401`, () => {expect(401).to.equal(401)})
   })
 })
+

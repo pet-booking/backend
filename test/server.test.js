@@ -9,19 +9,21 @@ describe('### Server file ###', () => {
   before(server.start)
   after(server.stop)
 
-  describe('root route - 200', () => {
-    it('expect root message', async () => {
+  describe('ROOT', () => {
+    it('expect root message - 200', async () => {
       const result = await superagent.get(apiURL)
       expect(result.status).to.equal(200)
       expect(result.body.message).to.exist
     })
 
     it('expect route not found - 404', async () => {
+      let result
       try {
         await superagent.get(`${apiURL}/not_real`)
-      } catch (result) {
-        expect(result.status).to.equal(404)
+      } catch (err) {
+        result = err
       }
+      expect(result.status).to.equal(404)
     })
   })
 })
