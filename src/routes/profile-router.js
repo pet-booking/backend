@@ -64,4 +64,23 @@ profileRouter
     }
   })
 
+  .put('/profiles/:id', bearerAuth, async (req, res, next)=> {
+    try{
+      console.log('ID-->', req.params.id)
+      console.log('MYMOCK --> ', req.account)
+
+      const isUpdated = await Profile.updateOne({ account: req.params.id }, req.body)
+        .setOptions({ new: true, runValidators: true })
+
+      console.log('UPDATED', isUpdated)
+      
+      const profile = await Profile.findOne({ account: req.account._id })
+      return res.json(profile)
+    }
+    catch(err) {
+      next(err)
+    }
+
+  })
+
 module.exports = profileRouter

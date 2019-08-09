@@ -267,7 +267,6 @@ describe('### Profile Route ###', () => {
     it(`doesn't have permissions to modify profile/me - 401`, async () => {
       let res
       try {
-        const mock = await profileMock.create()
         res = await superagent.put(`${apiURL}/me`)
           .set('Authorization', `Bearer FakePass`)
           .send({
@@ -279,9 +278,26 @@ describe('### Profile Route ###', () => {
       catch(err){
         res = err
       }
+
       expect(res.status).to.equal(401)
     })
-    // it('should modify a existing profile:id 200', () => { expect(200).to.equal(200) })
+
+    it.only('should modify a existing profile:id - 200', async () => {
+      const myMock = await profileMock.create()
+      const otherMock = await profileMock.create()
+      const res = await superagent.put(`${apiURL}/${otherMock.profile._id}`)
+        .set('Authorization', `Bearer ${myMock.tempAccount.token}`)
+        .send({
+          firstName: 'Jenny',
+          lastName: 'Tutone',
+          phoneNumber: '206-867-5309',
+        })
+
+      expect(res.status).to.equal(200)
+      expect(res.body.firstName).to.equal('Jenny')
+      expect(res.body.lastName).to.equal('Tutone')
+      expect(res.body.phoneNumber).to.equal('206-867-5309')
+    })
     // it(`expects a missing field profile:id - 400`, () => {expect(400).to.equal(400)})
     // it(`can't find a profile:id to modify 404`, () => {expect(404).to.equal(404)})
     // it(`doesn't have permissions to modify profile:id - 401`, () => {expect(401).to.equal(401)})
