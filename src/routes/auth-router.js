@@ -17,14 +17,10 @@ authRouter
     }
   })
 
-  .get('/auth', basicAuth, async (req, res, next) => {
-    try {
-      const token = await req.account.tokenCreate()
-      res.cookie('X-TLC-Token', token, { maxAge: 604800000 })
-      return res.json({ token })
-    } catch (err) {
-      return next(err)
-    }
+  .get('/auth', basicAuth, async (req, res) => {
+    const token = await req.account.tokenCreate()
+    res.cookie('X-TLC-Token', token, { maxAge: 604800000 })
+    return res.json({ token })
   })
 
   .put('/auth', basicAuth, async (req, res, next) => {
