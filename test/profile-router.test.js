@@ -331,12 +331,25 @@ describe('### Profile Route ###', () => {
       }
       expect(res.status).to.equal(404)
     })
-    it(`doesn't have permissions to modify profile:id - 401`, () => {
+
+    it(`doesn't have permissions to modify profile:id - 401`, async () => {
       let res
+      try{
+        const otherMock = await profileMock.create()
+        await superagent.put(`${apiURL}/${otherMock.profile._id}`)
+          .set('Authorization', `Bearer FakeId`)
+          .send({
+            firstName: 'Jenny',
+            lastName: 'Tutone',
+            phoneNumber: '206-867-5309',
+          })
+      }
+      catch (err){
+        res = err
+      }
+
       expect(res.status).to.equal(401)
     })
-
-    // it(`doesn't have permissions to modify profile:id - 401`, () => {expect(401).to.equal(401)})
 
   })
 })
