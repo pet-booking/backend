@@ -18,7 +18,8 @@ profileRouter
         photo: undefined,
       }).save()
       return res.json(profile)
-    } catch (err) {
+    }
+    catch (err) {
       return next(err)
     }
   })
@@ -34,7 +35,8 @@ profileRouter
       if(!profile)
         throw httpErrors(404, 'REQUEST_ERROR: Profile not found')
       return res.json(profile)
-    }catch(err){
+    }
+    catch(err){
       return next(err)
     }
   })
@@ -43,7 +45,8 @@ profileRouter
     try {
       const profile = await Profile.findById(req.params.id)
       return res.json(profile)
-    } catch(err){
+    }
+    catch(err){
       return next(err)
     }
   })
@@ -59,7 +62,8 @@ profileRouter
 
       const profile = await Profile.findOne({ account: req.account._id })
       return res.json(profile)
-    } catch (err) {
+    }
+    catch (err) {
       return next(err)
     }
   })
@@ -76,7 +80,8 @@ profileRouter
         throw httpErrors(404, 'REQUEST_ERROR: Profile not found')
       const profile = await Profile.findById(req.params.id)
       return res.json(profile)
-    } catch (err) {
+    }
+    catch (err) {
       return next(err)
     }
   })

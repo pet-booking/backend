@@ -20,7 +20,8 @@ describe('### Server file ###', () => {
       let result
       try {
         await superagent.get(`${apiURL}/not_real`)
-      } catch (err) {
+      }
+      catch (err) {
         result = err
       }
       expect(result.status).to.equal(404)
