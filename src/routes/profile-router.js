@@ -50,13 +50,31 @@ profileRouter
 
   .put('/profiles/me', bearerAuth, async (req, res, next) => {
     try {
-      if (!req.body.firstName || !req.body.lastName)
+      if(!req.body.firstName || !req.body.lastName)
         throw httpErrors(400, 'ERROR: first and last name required')
-
-      await Profile.updateOne({ account: req.account._id }, req.body)
+      const isUpdated = await Profile.updateOne({ account: req.account._id }, req.body)
         .setOptions({ new: true, runValidators: true })
+      if(isUpdated.n <= 0)
+        throw httpErrors(404, 'REQUEST_ERROR: Profile not found')
 
       const profile = await Profile.findOne({ account: req.account._id })
+      return res.json(profile)
+    } catch (err) {
+      return next(err)
+    }
+  })
+
+  .put('/profiles/:id', bearerAuth, async (req, res, next) => {
+    try {
+      if(!req.body.firstName || !req.body.lastName)
+        throw httpErrors(400, 'ERROR: first and last name required')
+
+      const isUpdated = await Profile.updateOne({ _id: req.params.id }, req.body)
+        .setOptions({ new: true, runValidators: true })
+
+      if(isUpdated.n <= 0)
+        throw httpErrors(404, 'REQUEST_ERROR: Profile not found')
+      const profile = await Profile.findById(req.params.id)
       return res.json(profile)
     } catch (err) {
       return next(err)

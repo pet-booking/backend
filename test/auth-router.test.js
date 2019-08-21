@@ -1,5 +1,4 @@
 require('./lib/setup')
-// require('@babel/register')
 const expect = require('chai').expect
 const superagent = require('superagent')
 const accountMock = require('./lib/account-mock')
@@ -25,19 +24,22 @@ describe('### Auth Route ###', () => {
     })
 
     it('expects an error - missing field - 400', async () => {
+      let res
       try {
-        return await superagent.post(apiURL)
+        res = await superagent.post(apiURL)
           .send({
             username: 'shark',
             password: 'sharkies',
           })
       }
-      catch (res) {
-        expect(res.status).to.equal(400)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(400)
     })
 
     it('expects an error - conflict - 409', async () => {
+      let res
       try {
         await superagent.post(apiURL)
           .send({
@@ -45,16 +47,17 @@ describe('### Auth Route ###', () => {
             email: 'shark@inthedark.com',
             password: 'sharkies',
           })
-        return await superagent.post(apiURL)
+        res = await superagent.post(apiURL)
           .send({
             username: 'shark',
             email: 'shark@inthedark.com',
             password: 'sharkies',
           })
       }
-      catch (res) {
-        expect(res.status).to.equal(409)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(409)
     })
   })
 
@@ -70,42 +73,50 @@ describe('### Auth Route ###', () => {
     })
 
     it('expect unauthorized error - 401', async () => {
+      let res
       try {
         const mock = await accountMock.create()
-        return await superagent.get(apiURL).auth(mock.username, 'lulwat')
+        res = await superagent.get(apiURL).auth(mock.username, 'lulwat')
       }
-      catch (res) {
-        expect(res.status).to.equal(401)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(401)
     })
 
     it('expect user not be found - 404', async () => {
+      let res
       try {
-        return await superagent.get(apiURL).auth('fakeuser', 'lulwat')
+        res = await superagent.get(apiURL).auth('fakeuser', 'lulwat')
       }
-      catch (res) {
-        expect(res.status).to.equal(404)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(404)
     })
 
     it('expect basic auth to be used - 400', async () => {
+      let res
       try {
         const mock = await accountMock.create()
-        return await superagent.get(apiURL)
+        res = await superagent.get(apiURL)
           .set('Authorization', `Bearer ${mock.token}`)
       }
-      catch (res) {
-        expect(res.status).to.equal(400)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(400)
     })
 
     it('expect auth header required - 400', async () => {
+      let res
       try {
-        return await superagent.get(apiURL)
+        res = await superagent.get(apiURL)
       }
-      catch (res) {
-        expect(res.status).to.equal(400)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(400)
     })
   })
 
@@ -124,23 +135,45 @@ describe('### Auth Route ###', () => {
           password: 'world',
           email: 'hello@world.net',
         })
+
       expect(res.status).to.equal(200)
     })
 
     it('expect missing value - 400', async () => {
+      let res
       const { password } = accountMock.fakeUser()
       try {
         const account = await accountMock.create(password)
-        return await superagent.put(apiURL)
+        res = await superagent.put(apiURL)
           .auth(account.username, password)
           .send({
             username: 'hello',
             password: 'world',
           })
       }
-      catch (res) {
-        expect(res.status).to.equal(400)
+      catch (err) {
+        res = err
       }
+      expect(res.status).to.equal(400)
+    })
+
+    it(`shouldn't modify - unauthorized - 401`, async () => {
+      let res
+      const { password } = accountMock.fakeUser()
+      try {
+        const account = await accountMock.create(password)
+        res = await superagent.put(apiURL)
+          .auth(account.username, 'FakePass')
+          .send({
+            username: 'hello',
+            password: 'world',
+            email: 'hello@world.net',
+          })
+      }
+      catch (err) {
+        res = err
+      }
+      expect(res.status).to.equal(401)
     })
   })
 })
