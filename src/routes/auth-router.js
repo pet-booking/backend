@@ -12,7 +12,8 @@ authRouter
       const token = await account.tokenCreate()
       res.cookie('X-TLC-Token', token, { maxAge: 604800000 })
       return res.json({ token })
-    } catch (err) {
+    }
+    catch (err) {
       return next(err)
     }
   })
@@ -29,7 +30,8 @@ authRouter
         throw httpErrors(400, 'REQUEST_ERROR: username, email, and password required')
       await req.account.update(req.body)
       res.sendStatus(200)
-    } catch (err) {
+    }
+    catch (err) {
       return next(err)
     }
   })

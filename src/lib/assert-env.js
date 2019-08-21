@@ -12,7 +12,8 @@ try {
     if (!process.env[key])
       throw new Error(`ENVIRONMENT ERROR: App requires process.env.${key} to be set`)
   })
-} catch (err) {
+}
+catch (err) {
   console.log(err.message)
   process.exit(1)
 }
