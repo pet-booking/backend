@@ -3,6 +3,7 @@
     "quotes": [
       "error", "single", { "allowTemplateLiterals": true }
     ],
+    "brace-style": ["error", "stroustrup"],
     "no-multi-spaces": "warn",
     "comma-spacing": ["warn", { "before": false, "after": true }],
     "require-atomic-updates": "error",
